@@ -1076,87 +1076,87 @@ const rows = input.split(/\n/);
 
 const programs = [];
 const programsMap = {};
-let deps = []
+let deps = [];
 
 rows.forEach(row => {
-    const match = row.match(/(.*)\s\((\d+)\)(?:\s->\s(.*))?/)
+	const match = row.match(/(.*)\s\((\d+)\)(?:\s->\s(.*))?/);
 
-    const program = {
-        name: match[1],
-        weight: parseInt(match[2], 10),
-        deps: match[3] ? match[3].split(',').map(val => val.trim()) : null 
-    }
+	const program = {
+		name: match[1],
+		weight: parseInt(match[2], 10),
+		deps: match[3] ? match[3].split(',').map(val => val.trim()) : null
+	};
 
-    programs.push(program.name)
-    deps = deps.concat(program.deps ? program.deps : []);
-    programsMap[program.name] = program;
-})
+	programs.push(program.name);
+	deps = deps.concat(program.deps ? program.deps : []);
+	programsMap[program.name] = program;
+});
 
-const base = programs.filter(program => deps.indexOf(program) === -1)
+const base = programs.filter(program => deps.indexOf(program) === -1);
 const unbalancedNodes = {};
 let firstUnbalanced = null;
 
 function calcWeights(node) {
-    if (!node.deps) {
-        return node.weight
-    }
+	if (!node.deps) {
+		return node.weight;
+	}
 
-    let calcedWeight = node.weight;
-    let childWeights = []
-    for (let i = 0; i < node.deps.length; i++) {
-        const childWeight = calcWeights(programsMap[node.deps[i]]);
+	let calcedWeight = node.weight;
+	let childWeights = [];
+	for (let i = 0; i < node.deps.length; i++) {
+		const childWeight = calcWeights(programsMap[node.deps[i]]);
 
-        childWeights.push({
-            name: node.deps[i],
-            weight: childWeight
-        })
+		childWeights.push({
+			name: node.deps[i],
+			weight: childWeight
+		});
 
-        calcedWeight += childWeight;
-    }
+		calcedWeight += childWeight;
+	}
 
-    const avg = childWeights.reduce((acc, a) => acc += a.weight, 0) / childWeights.length;
+	const avg = childWeights.reduce((acc, a) => acc += a.weight, 0) / childWeights.length;
 
-    const partitioned = partition(childWeights, val => val.weight >= avg);
-    
-    if (partitioned[0].length !== 0 && partitioned[1].length !== 0) {
-        let oddChild = null;
-        let oldChildExpectedWeight = null;
+	const partitioned = partition(childWeights, val => val.weight >= avg);
 
-        if (partitioned[0].length === 1) {
-            oddChild = partitioned[0][0];
-            oldChildExpectedWeight = partitioned[1][0].weight;
-        } else {
-            oddChild = partitioned[1][0];
-            oldChildExpectedWeight = partitioned[0][0].weight;
-        }
+	if (partitioned[0].length !== 0 && partitioned[1].length !== 0) {
+		let oddChild = null;
+		let oldChildExpectedWeight = null;
 
-        const weightDiff = oddChild.weight - oldChildExpectedWeight;
+		if (partitioned[0].length === 1) {
+			oddChild = partitioned[0][0];
+			oldChildExpectedWeight = partitioned[1][0].weight;
+		} else {
+			oddChild = partitioned[1][0];
+			oldChildExpectedWeight = partitioned[0][0].weight;
+		}
 
-        unbalancedNodes[oddChild.name] = {
-            node: oddChild,
-            origWeight: programsMap[oddChild.name].weight,
-            weightDiff,
-            fixedWeight: programsMap[oddChild.name].weight - weightDiff
-        }
-    }
+		const weightDiff = oddChild.weight - oldChildExpectedWeight;
 
-    return calcedWeight;
+		unbalancedNodes[oddChild.name] = {
+			node: oddChild,
+			origWeight: programsMap[oddChild.name].weight,
+			weightDiff,
+			fixedWeight: programsMap[oddChild.name].weight - weightDiff
+		};
+	}
+
+	return calcedWeight;
 }
 
-calcWeights(programsMap[base])
+calcWeights(programsMap[base]);
 
 console.log(unbalancedNodes);
 
 function partition(arr, pred) {
-    const res = [[],[]]
+	const res = [[], []];
 
-    arr.forEach(val => {
-        if (pred(val)) {
-            res[0].push(val)
-        } else {
-            res[1].push(val);
-        }
-    })
+	arr.forEach(val => {
+		if (pred(val)) {
+			res[0].push(val);
+		} else {
+			res[1].push(val);
+		}
+	});
 
-    return res;
+	return res;
 }

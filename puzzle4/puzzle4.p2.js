@@ -1,4 +1,4 @@
-const input=`bdwdjjo avricm cjbmj ran lmfsom ivsof
+const input = `bdwdjjo avricm cjbmj ran lmfsom ivsof
 mxonybc fndyzzi gmdp gdfyoi inrvhr kpuueel wdpga vkq
 bneh ylltsc vhryov lsd hmruxy ebnh pdln vdprrky
 fumay zbccai qymavw zwoove hqpd rcxyvy
@@ -516,25 +516,25 @@ const rows = input.split(/\n/);
 let invalids = 0;
 
 function reArrangeWord(word) {
-    return Array.from(word).sort().join();
+	return Array.from(word).sort().join();
 }
 
 rows.forEach(row => {
-    const words = row.split(/\s+/);
-    const wordsMap = {}
-    let valid = true;
-    words.forEach(word => {
-        word = reArrangeWord(word);
-        if (wordsMap[word]) {
-            valid = false;
-        }
+	const words = row.split(/\s+/);
+	const wordsMap = {};
+	let valid = true;
+	words.forEach(word => {
+		word = reArrangeWord(word);
+		if (wordsMap[word]) {
+			valid = false;
+		}
 
-        wordsMap[word] = true;
-    })
+		wordsMap[word] = true;
+	});
 
-    if (!valid) {
-        invalids++;
-    }
+	if (!valid) {
+		invalids++;
+	}
 });
 
 console.log(invalids, rows.length, rows.length - invalids);

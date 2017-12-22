@@ -7,38 +7,38 @@ let skipSize = 0;
 inputLengths = inputLengths.split(',').map(val => parseInt(val, 10));
 
 function generateInitialArray(length) {
-    retVal = [];
+	const retVal = [];
 
-    for (let i = 0; i < length; i++) {
-        retVal.push(i);
-    }
+	for (let i = 0; i < length; i++) {
+		retVal.push(i);
+	}
 
-    return retVal;
+	return retVal;
 }
 
 function reverseIndices(arr, indicesToReverse) {
-    for (let i = 0; i < indicesToReverse.length / 2; i++) {
-        const idxA = indicesToReverse[i];
-        const idxB = indicesToReverse[indicesToReverse.length - 1 - i];
-        const temp = arr[idxA];
-        arr[idxA] = arr[idxB]
-        arr[idxB] = temp;
-    }
+	for (let i = 0; i < indicesToReverse.length / 2; i++) {
+		const idxA = indicesToReverse[i];
+		const idxB = indicesToReverse[indicesToReverse.length - 1 - i];
+		const temp = arr[idxA];
+		arr[idxA] = arr[idxB];
+		arr[idxB] = temp;
+	}
 }
 
 inputLengths.forEach(jumpLength => {
-    let indicesToReverse = [];
-    for (let i = 0; i < jumpLength; i++) {
-        indicesToReverse.push((i + currPosition) % ARRAY_LENGTH)
-    }
+	let indicesToReverse = [];
+	for (let i = 0; i < jumpLength; i++) {
+		indicesToReverse.push((i + currPosition) % ARRAY_LENGTH);
+	}
 
-    reverseIndices(initialArray, indicesToReverse);
-    currPosition = (currPosition + skipSize + jumpLength) % ARRAY_LENGTH;
-    skipSize++
-    indicesToReverse
+	reverseIndices(initialArray, indicesToReverse);
+	currPosition = (currPosition + skipSize + jumpLength) % ARRAY_LENGTH;
+	skipSize++;
+	indicesToReverse;
 });
 
-initialArray
-skipSize
-currPosition
-console.log(initialArray[0] * initialArray[1])
+initialArray;
+skipSize;
+currPosition;
+console.log(initialArray[0] * initialArray[1]);

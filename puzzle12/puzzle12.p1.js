@@ -1997,7 +1997,7 @@ let input = `0 <-> 889, 1229, 1736
 1996 <-> 1284
 1997 <-> 153, 308, 1351
 1998 <-> 5, 235, 428, 524
-1999 <-> 1407, 1780, 1906, 1910` 
+1999 <-> 1407, 1780, 1906, 1910`; 
 
 // input = `0 <-> 2
 // 1 <-> 1
@@ -2008,50 +2008,49 @@ let input = `0 <-> 889, 1229, 1736
 // 6 <-> 4, 5`
 
 
-const rows = input.split(/\n/).map(val => val.split('<->').map(str => str.trim()))
+const rows = input.split(/\n/).map(val => val.split('<->').map(str => str.trim()));
 
-programsGraph = {};
+const programsGraph = {};
 
 function addProgramConnections(programId, connections) {
-    programsGraph[programId] = programsGraph[programId] || {programId, connections: new Set()}
-    connections.forEach(conn => {
-        programsGraph[programId].connections.add(conn)
-    })
+	programsGraph[programId] = programsGraph[programId] || { programId, connections: new Set() };
+	connections.forEach(conn => {
+		programsGraph[programId].connections.add(conn);
+	});
 }
 
 rows.forEach(row => {
-    const programId = row[0].trim();
-    const connections = row[1].split(',').map(val => val.trim());
+	const programId = row[0].trim();
+	const connections = row[1].split(',').map(val => val.trim());
 
-    addProgramConnections(programId, connections);
+	addProgramConnections(programId, connections);
 
-    connections.forEach(conn => {
-        addProgramConnections(conn, [programId])
-    })
-})
+	connections.forEach(conn => {
+		addProgramConnections(conn, [programId]);
+	});
+});
 
 let programsCount = 0;
 let visits = [];
 function isConnectedTo0(programId) {
-    if (programId === '0') {
-        return true;
-    }
+	if (programId === '0') {
+		return true;
+	}
 
-    if (visits.indexOf(programId) > -1) {
-        return;
-    }
+	if (visits.indexOf(programId) > -1) {
+		return;
+	}
 
-    visits.push(programId);
+	visits.push(programId);
 
-    let connectedTo0 = false;
-    return Array.from(programsGraph[programId].connections).reduce((acc, conn) => acc || isConnectedTo0(conn), false)
+	return Array.from(programsGraph[programId].connections).reduce((acc, conn) => acc || isConnectedTo0(conn), false);
 }
 
 Object.keys(programsGraph).forEach(programId => {
-    visits = [];
-    if (isConnectedTo0(programId)) {
-        programsCount++;
-    }
-})
+	visits = [];
+	if (isConnectedTo0(programId)) {
+		programsCount++;
+	}
+});
 
-programsCount
+programsCount;

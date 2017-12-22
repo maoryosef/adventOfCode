@@ -1061,24 +1061,24 @@ tvhftq (35)`;
 const rows = input.split(/\n/);
 
 const programs = [];
-let deps = []
+let deps = [];
 
 rows.forEach(row => {
-    const match = row.match(/(.*)\s\((\d+)\)(?:\s->\s(.*))?/)
+	const match = row.match(/(.*)\s\((\d+)\)(?:\s->\s(.*))?/);
 
-    const program = {
-        name: match[1],
-        weight: match[2],
-        deps: match[3] ? match[3].split(',').map(val => val.trim()) : null 
-    }
+	const program = {
+		name: match[1],
+		weight: match[2],
+		deps: match[3] ? match[3].split(',').map(val => val.trim()) : null
+	};
 
-    programs.push(program.name)
-    deps = deps.concat(program.deps ? program.deps : []);
-})
+	programs.push(program.name);
+	deps = deps.concat(program.deps ? program.deps : []);
+});
 
-programs
-deps
+programs;
+deps;
 
-const base = programs.filter(program => deps.indexOf(program) === -1)
+const base = programs.filter(program => deps.indexOf(program) === -1);
 
-base
+base;

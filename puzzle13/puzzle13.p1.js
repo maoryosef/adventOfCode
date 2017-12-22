@@ -40,7 +40,7 @@ let input = `0: 4
 86: 14
 88: 17
 94: 30
-98: 18`
+98: 18`;
 
 // input = `0: 3
 // 1: 2
@@ -52,40 +52,40 @@ const layers = {};
 let maxDepth = 0;
 
 rows.forEach(row => {
-    const parts = row.split(':')
+	const parts = row.split(':');
 
-    const depth = parts[0].trim();
-    const range = parseInt(parts[1].trim(), 10);
+	const depth = parts[0].trim();
+	const range = parseInt(parts[1].trim(), 10);
 
-    layers[depth] = range;
-    maxDepth = Math.max(maxDepth, depth)
+	layers[depth] = range;
+	maxDepth = Math.max(maxDepth, depth);
 });
 
 let pos = 0;
 let penalty = 0;
 for (let step = 0; step <= maxDepth; step++) {
-    if (layers[step]) {
-        const scannerLocation = getLocation(step, layers[step]); 
+	if (layers[step]) {
+		const scannerLocation = getLocation(step, layers[step]);
 
-        if (scannerLocation === 0) {
-            console.log(step, scannerLocation);
-            penalty += step * layers[step];
-        }
-    }
+		if (scannerLocation === 0) {
+			console.log(step, scannerLocation);
+			penalty += step * layers[step];
+		}
+	}
 }
 
-penalty 
+penalty; 
 
 function getLocation(step, range) {
-    const expandedLength = range * 2 - 2;
-    expandedLength
-    const mod = step % expandedLength;
-    mod
-    range;
-    console.log((range - 1) - mod)
-    if (mod > range - 1) {
-        return (range - 1) + ((range - 1) - mod);
-    }
+	const expandedLength = range * 2 - 2;
+	expandedLength;
+	const mod = step % expandedLength;
+	mod;
+	range;
+	console.log((range - 1) - mod);
+	if (mod > range - 1) {
+		return (range - 1) + ((range - 1) - mod);
+	}
 
-    return mod;
+	return mod;
 }

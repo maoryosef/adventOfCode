@@ -1997,7 +1997,7 @@ let input = `0 <-> 889, 1229, 1736
 1996 <-> 1284
 1997 <-> 153, 308, 1351
 1998 <-> 5, 235, 428, 524
-1999 <-> 1407, 1780, 1906, 1910` 
+1999 <-> 1407, 1780, 1906, 1910`; 
 
 // input = `0 <-> 2
 // 1 <-> 1
@@ -2007,42 +2007,41 @@ let input = `0 <-> 889, 1229, 1736
 // 5 <-> 6
 // 6 <-> 4, 5`
 
-const rows = input.split(/\n/).map(val => val.split('<->').map(str => str.trim()))
+const rows = input.split(/\n/).map(val => val.split('<->').map(str => str.trim()));
 
-programsGraph = {};
+const programsGraph = {};
 
 function addProgramConnections(programId, connections) {
-    programsGraph[programId] = programsGraph[programId] || {programId, connections: new Set()}
-    connections.forEach(conn => {
-        programsGraph[programId].connections.add(conn)
-    })
+	programsGraph[programId] = programsGraph[programId] || { programId, connections: new Set() };
+	connections.forEach(conn => {
+		programsGraph[programId].connections.add(conn);
+	});
 }
 
 rows.forEach(row => {
-    const programId = row[0].trim();
-    const connections = row[1].split(',').map(val => val.trim());
+	const programId = row[0].trim();
+	const connections = row[1].split(',').map(val => val.trim());
 
-    addProgramConnections(programId, connections);
+	addProgramConnections(programId, connections);
 
-    connections.forEach(conn => {
-        addProgramConnections(conn, [programId])
-    })
-})
+	connections.forEach(conn => {
+		addProgramConnections(conn, [programId]);
+	});
+});
 
 let visits = [];
 function isConnectedTo(programId, goal) {
-    if (programId === goal) {
-        return true;
-    }
+	if (programId === goal) {
+		return true;
+	}
 
-    if (visits.indexOf(programId) > -1) {
-        return;
-    }
+	if (visits.indexOf(programId) > -1) {
+		return;
+	}
 
-    visits.push(programId);
+	visits.push(programId);
 
-    let connectedTo0 = false;
-    return Array.from(programsGraph[programId].connections).reduce((acc, conn) => acc || isConnectedTo(conn, goal), false)
+	return Array.from(programsGraph[programId].connections).reduce((acc, conn) => acc || isConnectedTo(conn, goal), false);
 }
 
 const programKeys = Object.keys(programsGraph);
@@ -2051,26 +2050,26 @@ let groups = {};
 let connectedToAgroup = {};
 
 programKeys.forEach(goal => {
-    groups[goal] = [];
-    programKeys.forEach(programId => {
-        visits = [];
-        if (connectedToAgroup[programId]) {
-            return;
-        }
+	groups[goal] = [];
+	programKeys.forEach(programId => {
+		visits = [];
+		if (connectedToAgroup[programId]) {
+			return;
+		}
 
-        if (isConnectedTo(programId, goal)) {
-            groups[goal].push(programId);
-            connectedToAgroup[programId] = true;
-        }
-    })
-})
+		if (isConnectedTo(programId, goal)) {
+			groups[goal].push(programId);
+			connectedToAgroup[programId] = true;
+		}
+	});
+});
 
 const distinctGroups = new Set();
 
 Object.keys(groups).map(group => groups[group].join()).forEach(group => {
-    if (group !== '') {
-        distinctGroups.add(group);
-    }
-})
+	if (group !== '') {
+		distinctGroups.add(group);
+	}
+});
 
-console.log(distinctGroups.size)
+console.log(distinctGroups.size);

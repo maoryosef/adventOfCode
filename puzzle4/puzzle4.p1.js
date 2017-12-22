@@ -1,4 +1,4 @@
-const input=`bdwdjjo avricm cjbmj ran lmfsom ivsof
+const input = `bdwdjjo avricm cjbmj ran lmfsom ivsof
 mxonybc fndyzzi gmdp gdfyoi inrvhr kpuueel wdpga vkq
 bneh ylltsc vhryov lsd hmruxy ebnh pdln vdprrky
 fumay zbccai qymavw zwoove hqpd rcxyvy
@@ -515,20 +515,20 @@ jwfm ptjwrbl hhuv uolz adyweh qpj wxyogp igvnojq jmfw pqs fsnirby`;
 const rows = input.split(/\n/);
 let invalids = 0;
 rows.forEach(row => {
-    const words = row.split(/\s+/);
-    const wordsMap = {}
-    let valid = true;
-    words.forEach(word => {
-        if (wordsMap[word]) {
-            valid = false;
-        }
+	const words = row.split(/\s+/);
+	const wordsMap = {};
+	let valid = true;
+	words.forEach(word => {
+		if (wordsMap[word]) {
+			valid = false;
+		}
 
-        wordsMap[word] = true;
-    })
+		wordsMap[word] = true;
+	});
 
-    if (!valid) {
-        invalids++;
-    }
+	if (!valid) {
+		invalids++;
+	}
 });
 
 console.log(invalids, rows.length, rows.length - invalids);

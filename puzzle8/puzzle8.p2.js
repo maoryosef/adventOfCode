@@ -997,7 +997,7 @@ q dec 613 if s >= -2355
 r inc -691 if q < -5408
 xzn dec -546 if iy <= 1370
 ae inc 996 if su >= -1564
-buw inc 559 if okl <= 1919`
+buw inc 559 if okl <= 1919`;
 
 // input = `b inc 5 if a > 1
 // a inc 1 if b < 5
@@ -1016,40 +1016,40 @@ const lt = (a, b) => a < b;
 const dec = (reg, val) => reg - val;
 const inc = (reg, val) => reg + val;
 const TOKENS = {
-    'inc': inc,
-    'dec': dec,
-    '>': gt,
-    '>=': gte,
-    '==': eq,
-    '!=': neq,
-    '<=': lte,
-    '<': lt
+	'inc': inc,
+	'dec': dec,
+	'>': gt,
+	'>=': gte,
+	'==': eq,
+	'!=': neq,
+	'<=': lte,
+	'<': lt
 };
 
-const PARSE_REGEX = /^(.*?)\s+((?:inc)|(?:dec))\s+(-?\d+)\s+if\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)$/
+const PARSE_REGEX = /^(.*?)\s+((?:inc)|(?:dec))\s+(-?\d+)\s+if\s+([^\s]+)\s+([^\s]+)\s+([^\s]+)$/;
 let highestValue = -Infinity;
 
 commands.forEach(cmd => {
-    const tokenized = cmd.match(PARSE_REGEX);
-    const registerName = tokenized[1];
-    const op = tokenized[2];
-    const val = parseInt(tokenized[3], 10);
-    const compare = tokenized[4];
-    const operand = tokenized[5];
-    const compareTo = parseInt(tokenized[6], 10);
+	const tokenized = cmd.match(PARSE_REGEX);
+	const registerName = tokenized[1];
+	const op = tokenized[2];
+	const val = parseInt(tokenized[3], 10);
+	const compare = tokenized[4];
+	const operand = tokenized[5];
+	const compareTo = parseInt(tokenized[6], 10);
 
-    registers[registerName] = registers[registerName] || 0;
-    registers[compare] = registers[compare] || 0;
-    
-    if (TOKENS[operand](registers[compare], compareTo)) {
-        const newVal = TOKENS[op](registers[registerName], val);
-        registers[registerName] = newVal;
+	registers[registerName] = registers[registerName] || 0;
+	registers[compare] = registers[compare] || 0;
 
-        if (newVal > highestValue) {
-            highestValue = newVal;
-        }
-    }
-})
+	if (TOKENS[operand](registers[compare], compareTo)) {
+		const newVal = TOKENS[op](registers[registerName], val);
+		registers[registerName] = newVal;
+
+		if (newVal > highestValue) {
+			highestValue = newVal;
+		}
+	}
+});
 
 
-highestValue
+highestValue;

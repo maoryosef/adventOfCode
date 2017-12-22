@@ -38,7 +38,7 @@ add i -1
 jgz i -11
 snd a
 jgz f -16
-jgz a -19`
+jgz a -19`;
 
 // input = `set a 1
 // add a 2
@@ -56,64 +56,64 @@ const registers = {};
 let lastPlayedSound = null;
 let recoveredSound = null;
 
-const set = (a, b) => {registers[a] = resolveValue(b)};
-const add = (a, b) => {registers[a] = resolveValue(a) + resolveValue(b)};
-const mul = (a, b) => {registers[a] = resolveValue(a) * resolveValue(b)};
-const mod = (a, b) => {registers[a] = resolveValue(a) % resolveValue(b)};
-const snd = (a) => {playSound(resolveValue(a))};
+const set = (a, b) => { registers[a] = resolveValue(b); };
+const add = (a, b) => { registers[a] = resolveValue(a) + resolveValue(b); };
+const mul = (a, b) => { registers[a] = resolveValue(a) * resolveValue(b); };
+const mod = (a, b) => { registers[a] = resolveValue(a) % resolveValue(b); };
+const snd = (a) => { playSound(resolveValue(a)); };
 const rcv = (a) => resolveValue(a) > 0 ? recoverSound() : null;
 const jgz = (a, b) => resolveValue(a) > 0 ? resolveValue(b) : 0;
 
 function resolveValue(val) {
-    const asNumber = parseInt(val, 10);
-    if (!isNaN(asNumber)) {
-        return asNumber;
-    }
+	const asNumber = parseInt(val, 10);
+	if (!isNaN(asNumber)) {
+		return asNumber;
+	}
 
-    registers[val] = registers[val] || 0;
+	registers[val] = registers[val] || 0;
 
-    return registers[val];
+	return registers[val];
 }
 
 function recoverSound() {
-    recoveredSound = lastPlayedSound;
-    return true;
+	recoveredSound = lastPlayedSound;
+	return true;
 }
 
 function playSound(val) {
-    lastPlayedSound = val;
+	lastPlayedSound = val;
 }
 
 const TOKENS = {
-    'set': set,
-    'add': add,
-    'mul': mul,
-    'mod': mod,
-    'snd': snd,
-    'rcv': rcv,
-    'jgz': jgz
+	'set': set,
+	'add': add,
+	'mul': mul,
+	'mod': mod,
+	'snd': snd,
+	'rcv': rcv,
+	'jgz': jgz
 };
 //set a 1
 //snd a
-const PARSE_REGEX = /^([^\s]+?)\s+([^\s]+?)(?:\s+([^\s]+)|$)/
+const PARSE_REGEX = /^([^\s]+?)\s+([^\s]+?)(?:\s+([^\s]+)|$)/;
 
 let cursor = 0;
 
 while (cursor < commands.length) {
-    const cmd = commands[cursor];
-    const tokenized = cmd.match(PARSE_REGEX);
-    const operand = tokenized[1];
-    const a = tokenized[2];
-    const b = tokenized[3];
+	const cmd = commands[cursor];
+	const tokenized = cmd.match(PARSE_REGEX);
+	const operand = tokenized[1];
+	const a = tokenized[2];
+	const b = tokenized[3];
 
-    const res = TOKENS[operand](a, b);
+	const res = TOKENS[operand](a, b);
 
-    if (res === true) {
-        console.log(`first recovered sound ${recoveredSound}`);
-        return;
-    } else if (res) {
-        cursor += res;
-    } else {
-        cursor++;
-    }
+	if (res === true) {
+		console.log(`first recovered sound ${recoveredSound}`);
+		return;
+	} else if (res) {
+		cursor += res;
+	} else {
+		cursor++;
+	}
 }

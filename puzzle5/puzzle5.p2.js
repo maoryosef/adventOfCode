@@ -1073,22 +1073,22 @@ const input = `2
 -342
 -915`;
 
-const instructionsArray = input.split(/\n/).map(val => parseInt(val, 10))
+const instructionsArray = input.split(/\n/).map(val => parseInt(val, 10));
 
 let i = 0;
 let steps = 0;
 
 while (i < instructionsArray.length) {
-    const jump = instructionsArray[i];
-    if (jump >= 3) {
-        instructionsArray[i]--
-    } else {
-        instructionsArray[i]++
-    }
+	const jump = instructionsArray[i];
+	if (jump >= 3) {
+		instructionsArray[i]--;
+	} else {
+		instructionsArray[i]++;
+	}
 
-    i += jump;
-    steps++;
+	i += jump;
+	steps++;
 }
 
-instructionsArray 
-steps
+instructionsArray;
+steps;
