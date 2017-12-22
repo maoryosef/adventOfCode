@@ -4,13 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install-pre-commit": "./node_modules/precommit/bin/cli.js install"
   },
+  "precommit": ["eslint . --cache"],
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cli-progress": "^1.6.1",
     "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "eslint": "^4.13.1",
+    "precommit": "^1.2.2"
   }
 }
