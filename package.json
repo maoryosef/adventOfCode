@@ -1,8 +1,8 @@
 {
-  "name": "puzzle20",
+  "name": "adventofcode",
   "version": "1.0.0",
   "description": "",
-  "main": "puzzle20.p2.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cli-progress": "^1.6.1"
+    "cli-progress": "^1.6.1",
+    "lodash": "^4.17.4"
   }
 }
