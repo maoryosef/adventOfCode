@@ -57,7 +57,6 @@ function calculateKnotHash(arrayLength, inputLengthsString) {
 
 const grid = [];
 
-let count1 = 0;
 for (let i = 0; i < 128; i++) {
 	grid[i] = [];
 	const hashValue = calculateKnotHash(256, `hfdlxzhv-${i}`);

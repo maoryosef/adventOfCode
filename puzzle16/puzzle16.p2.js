@@ -55,14 +55,16 @@ for (let i = 0; i < RUNS; i++) {
 				case 's':
 					instructionsCache[inst] = _.partial(spin, _, parseInt(inst.slice(1), 10));
 					break;
-				case 'x':
+				case 'x': {
 					const positionsToSwap = inst.slice(1).split('/').map(pos => parseInt(pos.trim(), 10));
 					instructionsCache[inst] = _.partial(exchange, _, positionsToSwap[0], positionsToSwap[1]);
 					break;
-				case 'p':
+				}
+				case 'p': {
 					const programsToSwap = inst.slice(1).split('/').map(prog => prog.trim());
 					instructionsCache[inst] = _.partial(swap, _, programsToSwap[0], programsToSwap[1]);
 					break;
+				}
 			}
 		}
 

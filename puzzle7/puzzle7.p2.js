@@ -1094,7 +1094,6 @@ rows.forEach(row => {
 
 const base = programs.filter(program => deps.indexOf(program) === -1);
 const unbalancedNodes = {};
-let firstUnbalanced = null;
 
 function calcWeights(node) {
 	if (!node.deps) {

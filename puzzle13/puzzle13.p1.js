@@ -61,7 +61,6 @@ rows.forEach(row => {
 	maxDepth = Math.max(maxDepth, depth);
 });
 
-let pos = 0;
 let penalty = 0;
 for (let step = 0; step <= maxDepth; step++) {
 	if (layers[step]) {

@@ -34,21 +34,21 @@ function swap(arr, progA, progB) {
 	return exchange(arr, progAIdx, progBIdx);
 }
 instructions = instructions.split(',').map(inst => inst.trim());
-let i = 0;
-let zeroIdx = 0;
 instructions.forEach(inst => {
 	switch (inst.charAt(0)) {
 		case 's':
 			programs = spin(programs, parseInt(inst.slice(1), 10));
 			break;
-		case 'x':
+		case 'x': {
 			const positionsToSwap = inst.slice(1).split('/').map(pos => parseInt(pos.trim(), 10));
 			programs = exchange(programs, positionsToSwap[0], positionsToSwap[1]);
 			break;
-		case 'p':
+		}
+		case 'p': {
 			const programsToSwap = inst.slice(1).split('/').map(prog => prog.trim());
 			programs = swap(programs, programsToSwap[0], programsToSwap[1]);
 			break;
+		}
 	}
 });
 

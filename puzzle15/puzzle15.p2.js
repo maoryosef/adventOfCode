@@ -7,8 +7,6 @@ const bar1 = new progress.Bar({
 	hideCursor: true
 }, progress.Presets.legacy);
 
-let genAprevVal = 65;
-let genBprevVal = 8921;
 const FACTOR_A = 16807;
 const FACTOR_B = 48271;
 const DIVIDER = 2147483647;
