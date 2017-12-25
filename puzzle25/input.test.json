@@ -1,0 +1,26 @@
+{
+	"A": {
+		"0": {
+			"newVal": 1,
+			"nextState": "B",
+			"move": 1
+		},
+		"1": {
+			"newVal": 0,
+			"nextState": "B",
+			"move": -1
+		}
+	},
+	"B": {
+		"0": {
+			"newVal": 1,
+			"nextState": "A",
+			"move": -1
+		},
+		"1": {
+			"newVal": 1,
+			"nextState": "A",
+			"move": 1
+		}
+	}
+}
