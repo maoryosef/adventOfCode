@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install-pre-commit": "./node_modules/precommit/bin/cli.js install"
+    "precommit": "eslint . --cache"
   },
-  "precommit": ["eslint . --cache"],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -16,6 +15,6 @@
   },
   "devDependencies": {
     "eslint": "^4.13.1",
-    "precommit": "^1.2.2"
+    "husky": "^0.14.3"
   }
 }
