@@ -1,4 +1,5 @@
 'use strict';
+
 const fs = require('fs');
 const _ = require('lodash');
 
@@ -20,14 +21,13 @@ let constelationsCount = 0;
 while (points.length > 0) {
 	const point = points.shift();
 
-	const constelation = [point];
-
-	let chainedPoints = [];
+	let previousPoints = [point];
+	let nextPoints = [];
 
 	do {
-		constelation.push(...chainedPoints);
-		chainedPoints = _.remove(points, p => constelation.filter(op => getDist(p, op) <= 3).length > 0);
-	} while (chainedPoints.length > 0);
+		nextPoints = _.remove(points, p => previousPoints.filter(op => getDist(p, op) <= 3).length > 0);
+		previousPoints = nextPoints;
+	} while (nextPoints.length > 0);
 
 	constelationsCount++;
 }
