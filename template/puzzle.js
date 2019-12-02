@@ -1,6 +1,6 @@
 'use strict';
 
-const TEST_MODE=process.env.TESTING;
+const TEST_MODE=true;
 
 const fs = require('fs');
 const _ = require('lodash');
