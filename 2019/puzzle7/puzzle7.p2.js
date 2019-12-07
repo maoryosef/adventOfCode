@@ -29,6 +29,16 @@ function parseOp(op) {
 	};
 }
 
+function getArgs(program, idx, argsState) {
+	const [argPos1, argPos2] = argsState;
+
+	const arg1 = argPos1 ? program[idx + 1] : program[program[idx + 1]];
+	const arg2 = argPos2 ? program[idx + 2] : program[program[idx + 2]];
+	const out = program[idx + 3];
+
+	return {out, arg1, arg2};
+}
+
 function createAmp(programSource, phaseSetting) {
 	const program = programSource.slice(0);
 	let opIndex = 0;
@@ -60,85 +70,62 @@ function createAmp(programSource, phaseSetting) {
 
 		while (program[opIndex] !== 99) {
 			const {action, args} = parseOp(program[opIndex]);
+			const {out, arg1, arg2} = getArgs(program, opIndex, args);
 
 			let next = 1;
-			if (action === 1) {
-				const [argPos1, argPos2] = args;
-
-				const arg1 = argPos1 ? program[opIndex + 1] : program[program[opIndex + 1]];
-				const arg2 = argPos2 ? program[opIndex + 2] : program[program[opIndex + 2]];
-				const out = program[opIndex + 3];
-
-				program[out] = arg1 + arg2;
-				next = 4;
-			} else if (action === 2) {
-				const [argPos1, argPos2] = args;
-
-				const arg1 = argPos1 ? program[opIndex + 1] : program[program[opIndex + 1]];
-				const arg2 = argPos2 ? program[opIndex + 2] : program[program[opIndex + 2]];
-				const out = program[opIndex + 3];
-
-				program[out] = arg1 * arg2;
-				next = 4;
-			} else if (action === 3) {
-				const out = program[opIndex + 1];
-				program[out] = await getInput();
-				next = 2;
-			} else if (action === 4) {
-				const [argPos1] = args;
-				const out = argPos1 ? program[opIndex + 1] : program[program[opIndex + 1]];
-
-				output = out;
-				nextAmp.signal(out);
-				next = 2;
-			} else if (action === 5) {
-				const [argPos1, argPos2] = args;
-				const arg1 = argPos1 ? program[opIndex + 1] : program[program[opIndex + 1]];
-				const arg2 = argPos2 ? program[opIndex + 2] : program[program[opIndex + 2]];
-
-				if (arg1 !== 0) {
-					opIndex = arg2;
-					next = 0;
-				} else {
-					next = 3;
+			switch (action) {
+				case 1: program[out] = arg1 + arg2; next = 4; break;
+				case 2: program[out] = arg1 * arg2; next = 4; break;
+				case 3: {
+					const out = program[opIndex + 1];
+					program[out] = await getInput();
+					next = 2;
+					break;
 				}
-			} else if (action === 6) {
-				const [argPos1, argPos2] = args;
-				const arg1 = argPos1 ? program[opIndex + 1] : program[program[opIndex + 1]];
-				const arg2 = argPos2 ? program[opIndex + 2] : program[program[opIndex + 2]];
-
-				if (arg1 === 0) {
-					opIndex = arg2;
-					next = 0;
-				} else {
-					next = 3;
+				case 4: {
+					output = arg1;
+					nextAmp.signal(arg1);
+					next = 2;
+					break;
 				}
-			} else if (action === 7) {
-				const [argPos1, argPos2] = args;
-				const arg1 = argPos1 ? program[opIndex + 1] : program[program[opIndex + 1]];
-				const arg2 = argPos2 ? program[opIndex + 2] : program[program[opIndex + 2]];
-				const out = program[opIndex + 3];
-
-				if (arg1 < arg2) {
-					program[out] = 1;
-				} else {
-					program[out] = 0;
+				case 5: {
+					if (arg1 !== 0) {
+						opIndex = arg2;
+						next = 0;
+					} else {
+						next = 3;
+					}
+					break;
 				}
-				next = 4;
-			} else if (action === 8) {
-				const [argPos1, argPos2] = args;
-				const arg1 = argPos1 ? program[opIndex + 1] : program[program[opIndex + 1]];
-				const arg2 = argPos2 ? program[opIndex + 2] : program[program[opIndex + 2]];
-				const out = program[opIndex + 3];
-
-				if (arg1 === arg2) {
-					program[out] = 1;
-				} else {
-					program[out] = 0;
+				case 6: {
+					if (arg1 === 0) {
+						opIndex = arg2;
+						next = 0;
+					} else {
+						next = 3;
+					}
+					break;
 				}
-				next = 4;
-			} else {
-				throw new Error(`unexpected op, ${action}, at index, ${opIndex}`);
+				case 7: {
+					if (arg1 < arg2) {
+						program[out] = 1;
+					} else {
+						program[out] = 0;
+					}
+					next = 4;
+					break;
+				}
+				case 8: {
+					if (arg1 === arg2) {
+						program[out] = 1;
+					} else {
+						program[out] = 0;
+					}
+					next = 4;
+					break;
+				}
+				default:
+					throw new Error(`unexpected op, ${action}, at index, ${opIndex}`);
 			}
 
 			opIndex += next;
