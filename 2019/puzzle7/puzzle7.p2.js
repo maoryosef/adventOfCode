@@ -53,7 +53,7 @@ function createAmp(programSource, phaseSetting) {
 		notifyOnInput();
 	}
 
-	const waitForInput = async () => new Promise(res => {notifyOnInput = res;});
+	const waitForInput = () => new Promise(res => {notifyOnInput = res;});
 
 	async function getInput() {
 		if (signalQueue.length === 0) {
