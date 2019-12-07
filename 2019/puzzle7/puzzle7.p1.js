@@ -4,6 +4,7 @@ const TEST_MODE=false;
 
 const fs = require('fs');
 const _ = require('lodash');
+const Combinatorics = require('js-combinatorics');
 
 const input = fs.readFileSync(`${__dirname}/input${TEST_MODE ? '.test': ''}.txt`, 'utf-8');
 
@@ -121,43 +122,15 @@ function runProgram(inputArray, programSource) {
 	return output;
 }
 
-const BASE=5;
-function incInput(inputArray) {
-	let carry = 0;
-	let idx = inputArray.length - 1;
-
-	inputArray[idx]++;
-
-	while (idx > -1) {
-		inputArray[idx] += carry;
-
-		if (inputArray[idx] === BASE) {
-			carry = 1;
-			inputArray[idx] = 0;
-		} else {
-			carry = 0;
-		}
-
-		idx--;
-	}
-}
-
-const inputArray = [0, 0, 0, 0, 0];
 let largestOutput = -Infinity;
-do {
-	incInput(inputArray);
 
-	const inputSet = new Set(inputArray);
-	if (inputSet.size !== 5) {
-		continue;
-	}
+const permutations = Combinatorics.permutation([0, 1, 2, 3, 4]).toArray();
 
-	// console.log('input', inputArray.join(','));
+permutations.forEach(inputArray => {
 	const output = inputArray.reduce((acc, val) => runProgram([val, acc], codes), 0);
-	// console.log('ouput', output);
 	if (output > largestOutput) {
 		largestOutput = output;
 	}
-} while (inputArray.join('') !== '00000');
+});
 
 console.log(largestOutput);
