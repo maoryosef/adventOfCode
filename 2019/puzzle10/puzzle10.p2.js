@@ -1,6 +1,6 @@
 'use strict';
 
-const TEST_MODE=true;
+const TEST_MODE=false;
 
 const fs = require('fs');
 const _ = require('lodash');
@@ -56,21 +56,38 @@ function calcSlopes(astroid, allAstroids) {
 		}
 
 		const slope = (a.y - astroid.y) / (a.x - astroid.x);
+		let angle = Math.atan2(a.y - astroid.y, a.x - astroid.x) * 180 / Math.PI + 90;
+		if (angle < 0) {
+			angle += 360;
+		}
+
 		const distance = Math.sqrt(Math.pow(a.x - astroid.x, 2) + Math.pow(a.y - astroid.y, 2));
 
-		slopes.push({a, slope, distance});
+		slopes.push({a, slope, distance, angle});
 	});
 
-	return _.sortBy(slopes, ['slope', 'distance']);
+	return slopes.sort((a, b) => {
+		if (a.angle !== b.angle) {
+			return a.angle - b.angle;
+		}
+
+		if (a.distance !== b.distance) {
+			return a.distance - b.distance;
+		}
+
+		return b.a.x - a.a.x;
+	});
 }
 
 function shootAstroids(astroid, allAstroids) {
 	const livingAstroids = _.reject(allAstroids, astroid);
-	const slopes = calcSlopes(astroid, livingAstroids)
+	const slopes = calcSlopes(astroid, livingAstroids);
 	const killedAstroids = new Set();
 	let lastSlope = null;
 
-	while (killedAstroids.size < 200) {
+	let killed;
+	do {
+		killed = 0;
 		slopes.forEach(s => {
 			if (killedAstroids.has(s.a)) {
 				return;
@@ -82,12 +99,12 @@ function shootAstroids(astroid, allAstroids) {
 
 			lastSlope = s.slope;
 			killedAstroids.add(s.a);
-			console.log(killedAstroids.size, s.a);
+			killed++;
 			if (killedAstroids.size === 200) {
 				console.log('killed', s.a);
 			}
 		});
-	}
+	} while (killedAstroids.size < 200 && killed > 0);
 }
 
 const intersectionsMap = _(astroids)
@@ -108,7 +125,7 @@ const astroidPosition = _(intersectionsMap)
 	.map(k => ({x: parseInt(k.split(',')[0]), y: parseInt(k.split(',')[1])}))
 	.head();
 
-console.log(astroidPosition);
+console.log('astroid position', astroidPosition);
 
 shootAstroids(astroidPosition, astroids);
 
