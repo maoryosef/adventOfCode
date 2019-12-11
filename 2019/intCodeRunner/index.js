@@ -41,7 +41,7 @@ function getArgs(program, idx, argsState, relativeBase) {
 	return {arg1, arg2, arg3};
 }
 
-function runProgram(inputArray, programSource) {
+function runProgram(inputArray, programSource, {onInputRequest, onOutput = _.noop}) {
 	const program = programSource.slice(0);
 	let output = null;
 	let inputIdx = 0;
@@ -59,11 +59,15 @@ function runProgram(inputArray, programSource) {
 			case 1: program[arg3] = arg1Value + arg2Value; next = 4; break;
 			case 2: program[arg3] = arg1Value * arg2Value; next = 4; break;
 			case 3: {
-				program[arg1] = inputArray[inputIdx++];
+				if (onInputRequest) {
+					program[arg1] = onInputRequest();
+				} else {
+					program[arg1] = inputArray[inputIdx++];
+				}
 				next = 2;
 				break;
 			}
-			case 4: output = arg1Value; next = 2; break;
+			case 4: output = arg1Value; onOutput(arg1Value); next = 2; break;
 			case 5: {
 				if (arg1Value !== 0) {
 					opIndex = arg2Value;
