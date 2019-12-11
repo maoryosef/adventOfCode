@@ -13,6 +13,21 @@ function drawSvg(image, width, height, valueMap, factor) {
 	return str;
 }
 
+function drawAscii(image, width, height, valueMap = {0: ' ', 1: '#'}) {
+	let str = '';
+
+	for (let y = 0; y < height; y++) {
+		for (let x = 0; x < width; x++) {
+			str += valueMap[image[y][x]] || '!';
+		}
+		str += '\n';
+	}
+
+	return str;
+}
+
+
 module.exports = {
-	drawSvg
+	drawSvg,
+	drawAscii
 };
