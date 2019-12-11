@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 function drawSvg(image, width, height, valueMap, factor) {
 	let str = `<html><div style="display: block"></div><br/><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width * factor}" height="${height * factor}" style="border: 1px solid black">`;
 
@@ -13,12 +15,12 @@ function drawSvg(image, width, height, valueMap, factor) {
 	return str;
 }
 
-function drawAscii(image, width, height, valueMap = {0: ' ', 1: '#'}) {
+function drawAscii(image, width, height, valueMap = {0: ' ', 1: '#'}, factor = 1) {
 	let str = '';
 
 	for (let y = 0; y < height; y++) {
 		for (let x = 0; x < width; x++) {
-			str += valueMap[image[y][x]] || '!';
+			str += _.repeat(valueMap[image[y][x]] || '!', factor);
 		}
 		str += '\n';
 	}

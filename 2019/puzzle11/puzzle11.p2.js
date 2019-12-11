@@ -107,4 +107,4 @@ for (let y = minY; y <= maxY; y++) {
 	}
 }
 
-console.log(drawAscii(image, WIDTH, HEIGHT));
+console.log(drawAscii(image, WIDTH, HEIGHT, {0: ' ', 1: '#'}, 2));
