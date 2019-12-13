@@ -25,9 +25,9 @@ function parseOp(op) {
 
 function getArgByPosition(program, idx, argState, relativeBase) {
 	switch(argState) {
-		case 0: {return program[idx] || 0;}
+		case 0: return program[idx] || 0;
 		case 1: return idx;
-		case 2: {return (program[idx] || 0) + relativeBase;}
+		case 2: return (program[idx] || 0) + relativeBase;
 	}
 }
 
@@ -41,7 +41,7 @@ function getArgs(program, idx, argsState, relativeBase) {
 	return {arg1, arg2, arg3};
 }
 
-function runProgram(inputArray, programSource, {onInputRequest, onOutput = _.noop}) {
+function runProgram(inputArray, programSource, {onInputRequest, onOutput = _.noop} = {}) {
 	const program = programSource.slice(0);
 	let output = null;
 	let inputIdx = 0;
