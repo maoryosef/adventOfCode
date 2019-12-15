@@ -33,7 +33,7 @@ describe('puzzle 15', () => {
 		test('real input', () => {
 			const res = solverP1.solve(getPath(realInput[0]));
 
-			expect(res).toBe(true);
+			expect(res).toBe(282);
 		});
 	});
 

@@ -5,16 +5,24 @@ const _ = require('lodash');
 const {runProgram, parseProgram} = require('../intCodeRunner');
 
 const getPosKey = pos => JSON.stringify(_.pick(pos, ['x', 'y']));
-const getOposite = d => {
-	switch(d) {
-		case 1: return 2;
-		case 2: return 1;
-		case 3: return 4;
-		case 4: return 3;
+
+const getDirection = (from, to) => {
+	switch(true) {
+		case from.x < to.x: return 4;
+		case from.x > to.x: return 3;
+		case from.y > to.y: return 1;
+		case from.y < to.y: return 2;
 	}
 };
 
-function findCommonAncestorPath(to, from) {
+const getNeighbors = pos => [
+	{ d: 1, x: pos.x, y: pos.y - 1, p: pos }, //N
+	{ d: 2, x: pos.x, y: pos.y + 1, p: pos }, //S
+	{ d: 3, x: pos.x - 1, y: pos.y, p: pos }, //W
+	{ d: 4, x: pos.x + 1, y: pos.y, p: pos }  //E
+];
+
+function findCommonAncestorPath(from, to) {
 	const ancestors = new Set();
 
 	let next = to.p;
@@ -26,10 +34,10 @@ function findCommonAncestorPath(to, from) {
 
 	next = from;
 
-	const path = [];
+	const pathToAncestor = [];
 
 	while (!ancestors.has(getPosKey(next))) {
-		path.push(getOposite(next.d));
+		pathToAncestor.push({...next.p, d: getDirection(next, next.p)});
 		next = next.p;
 	}
 
@@ -37,13 +45,13 @@ function findCommonAncestorPath(to, from) {
 
 	next = to;
 
-	const path2 = [];
+	const pathToTarget = [];
 	while (getPosKey(next) !== ancestor) {
-		path2.push(next.d);
+		pathToTarget.push(next);
 		next = next.p;
 	}
 
-	return [...path, ..._.reverse(path2)];
+	return pathToAncestor.concat(_.reverse(pathToTarget));
 }
 
 function solve(inputFilename) {
@@ -51,48 +59,43 @@ function solve(inputFilename) {
 
 	function generateProgramIO() {
 		const visited = {};
+		_.set(visited, [0, 0], true);
 		let solution;
 
-		const startP = {x: 0, y: 0};
-		let currentPosition = startP;
+		const startPos = {x: 0, y: 0};
 		let ancestorPath = [];
 
-		const stepsQueue = [
-			{d: 1, x: 0, y: -1, p: startP},
-			{d: 2, x: 0, y: 1, p: startP},
-			{d: 3, x: -1, y: 0, p: startP},
-			{d: 4, x: 1, y: 0, p: startP},
-		];
-
-		let currentStep;
+		const stepsQueue = getNeighbors(startPos);
+		let currentPos = startPos;
+		let nextPos;
 
 		function onInputRequest() {
 			if (ancestorPath.length) {
-				return ancestorPath.shift();
+				nextPos = ancestorPath.shift();
+			} else {
+				nextPos = stepsQueue.shift();
+
+				while (_.get(visited, [nextPos.x, nextPos.y])) {
+					nextPos = stepsQueue.shift();
+				}
+
+				if (nextPos.p.x !== currentPos.x || nextPos.p.y !== currentPos.y) {
+					ancestorPath = findCommonAncestorPath(currentPos, nextPos);
+
+					nextPos = ancestorPath.shift();
+				}
 			}
 
-			currentStep = stepsQueue.shift();
+			_.set(visited, [nextPos.x, nextPos.y], true);
 
-			while (_.get(visited, [currentStep.x, currentStep.y])) {
-				currentStep = stepsQueue.shift();
-			}
-
-			if (currentStep.p.x !== currentPosition.x && currentStep.y !== currentPosition.y) {
-				ancestorPath = findCommonAncestorPath(currentStep, currentPosition);
-
-				return ancestorPath.shift();
-			}
-
-			_.set(visited, [currentStep.x, currentStep.y], true);
-
-			return currentStep.d;
+			return nextPos.d;
 		}
 
 		function backtrackSolution() {
-			let next = currentStep;
+			let next = nextPos;
 
 			solution = [];
-			while (next) {
+			while (next.p) {
 				solution.push(next);
 				next = next.p;
 			}
@@ -104,18 +107,15 @@ function solve(inputFilename) {
 			}
 
 			if (output === 1) {
-				currentPosition = currentStep;
-				const north = {d: 1, x: currentStep.x, y: currentStep.y - 1, p: currentStep};
-				const south = {d: 2, x: currentStep.x, y: currentStep.y + 1, p: currentStep};
-				const west = {d: 3, x: currentStep.x - 1, y: currentStep.y, p: currentStep};
-				const east = {d: 4, x: currentStep.x + 1, y: currentStep.y, p: currentStep};
+				currentPos = nextPos;
+				const neighbors = getNeighbors(nextPos)
+					.filter(n => !_.get(visited, [n.x, n.y]));
 
-				stepsQueue.push(north, south, east, west);
+				stepsQueue.push(...neighbors);
 			}
 		}
 
 		function getSteps() {
-			console.log(solution);
 			return solution.length;
 		}
 
@@ -131,7 +131,6 @@ function solve(inputFilename) {
 		};
 	}
 
-
 	const program = parseProgram(input);
 
 	const {onInputRequest, onOutput, getSteps, shouldBreak} = generateProgramIO();
@@ -144,8 +143,6 @@ function solve(inputFilename) {
 
 	return getSteps();
 }
-
-console.log(solve(__dirname + '/__TESTS__/input.txt'));
 
 module.exports = {
 	solve
