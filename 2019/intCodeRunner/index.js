@@ -41,13 +41,13 @@ function getArgs(program, idx, argsState, relativeBase) {
 	return {arg1, arg2, arg3};
 }
 
-function runProgram(inputArray, programSource, {onInputRequest, onOutput = _.noop} = {}) {
+function runProgram(inputArray, programSource, {onInputRequest, onOutput = _.noop, shouldBreak = _.noop} = {}) {
 	const program = programSource.slice(0);
 	let output = null;
 	let inputIdx = 0;
 	let opIndex = 0;
 	let relativeBase = 0;
-	while (program[opIndex] !== 99) {
+	while (program[opIndex] !== 99 || shouldBreak()) {
 		const {action, args} = parseOp(program[opIndex]);
 		const {arg1, arg2, arg3} = getArgs(program, opIndex, args, relativeBase);
 

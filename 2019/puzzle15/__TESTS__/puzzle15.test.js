@@ -4,8 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const each = require('jest-each').default;
 const _ = require('lodash');
-const solverP1 = require('../puzzle<PNUM>.p1');
-const solverP2 = require('../puzzle<PNUM>.p2');
+const solverP1 = require('../puzzle15.p1');
+const solverP2 = require('../puzzle15.p2');
 
 const [testInputs, realInput] = _(__dirname)
 	.thru(fs.readdirSync)
@@ -15,9 +15,9 @@ const [testInputs, realInput] = _(__dirname)
 
 const getPath = filename => `${__dirname}/${filename}`;
 
-describe('puzzle <PNUM>', () => {
+describe('puzzle 15', () => {
 	describe('part 1', () => {
-		if (testInputs > 0) {
+		if (testInputs.length > 0) {
 			const answers = [
 			];
 
@@ -38,7 +38,7 @@ describe('puzzle <PNUM>', () => {
 	});
 
 	describe('part 2', () => {
-		if (testInputs > 0) {
+		if (testInputs.length > 0) {
 			const answers = [
 			];
 
