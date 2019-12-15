@@ -47,7 +47,7 @@ function runProgram(inputArray, programSource, {onInputRequest, onOutput = _.noo
 	let inputIdx = 0;
 	let opIndex = 0;
 	let relativeBase = 0;
-	while (program[opIndex] !== 99 || shouldBreak()) {
+	while (program[opIndex] !== 99 && !shouldBreak()) {
 		const {action, args} = parseOp(program[opIndex]);
 		const {arg1, arg2, arg3} = getArgs(program, opIndex, args, relativeBase);
 
