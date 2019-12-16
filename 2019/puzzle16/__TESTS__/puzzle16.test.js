@@ -42,23 +42,22 @@ describe('puzzle 16', () => {
 	});
 
 	describe('part 2', () => {
-		if (testInputs.length > 0) {
-			const answers = [
-			];
+		const inputsWithAnswers = [
+			['03036732577212944063491565474664', '84462026'],
+			['02935109699940807407585447034323', '78725270'],
+			['03081770884921959731165446850517', '53553731'],
+		];
 
-			const inputsWithAnswers = _.zip(testInputs, answers);
+		each(inputsWithAnswers).test('test case %s should be [%s]', (testInput, expected) => {
+			const res = solverP2.solve(null, testInput);
 
-			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
-				const res = solverP2.solve(getPath(testInputFilename));
-
-				expect(res).toBe(expected);
-			});
-		}
+			expect(res).toBe(expected);
+		});
 
 		test('real input', () => {
 			const res = solverP2.solve(getPath(realInput[0]));
 
-			expect(res).toBe(true);
+			expect(res).toBe('87766336');
 		});
 	});
 });

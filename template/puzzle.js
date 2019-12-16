@@ -3,8 +3,8 @@
 const fs = require('fs');
 const _ = require('lodash');
 
-function solve(inputFilename) {
-	const input = fs.readFileSync(inputFilename, 'utf-8');
+function solve(inputFilename, inputStr) {
+	const input = inputStr || fs.readFileSync(inputFilename, 'utf-8');
 
 	const res = _(input)
 		.split('\n')
