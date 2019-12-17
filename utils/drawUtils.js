@@ -18,9 +18,11 @@ function drawSvg(image, width, height, valueMap, factor) {
 function drawAscii(image, width, height, valueMap = {0: ' ', 1: '#'}, factor = 1) {
 	let str = '';
 
+	const getVal = val => valueMap === true ? val : valueMap[val] || '!';
+
 	for (let y = 0; y < height; y++) {
 		for (let x = 0; x < width; x++) {
-			str += _.repeat(valueMap[image[y][x]] || '!', factor);
+			str += _.repeat(getVal(image[y][x]), factor);
 		}
 		str += '\n';
 	}
