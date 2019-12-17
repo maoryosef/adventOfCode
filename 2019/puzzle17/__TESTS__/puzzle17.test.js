@@ -54,7 +54,7 @@ describe('puzzle 17', () => {
 		test('real input', () => {
 			const res = solverP2.solve(getPath(realInput[0]));
 
-			expect(res).toBe(true);
+			expect(res).toBe(696373);
 		});
 	});
 });
