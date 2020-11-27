@@ -4,7 +4,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "jest",
+		"gen": "./scripts/gen.sh",
+		"test": "./scripts/test-current.sh",
+		"test:year": "./scripts/test-year.sh",
+		"test:all": "jest",
 		"precommit": "eslint . --cache"
 	},
 	"keywords": [],

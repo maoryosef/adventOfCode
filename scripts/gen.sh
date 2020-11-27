@@ -1,5 +1,14 @@
-YEAR=2019
-PUZZLE=$1
+YEAR=`date +'%Y'`
+
+PUZZLES=(`ls $YEAR`)
+
+PUZZLE=1
+for i in "${PUZZLES[@]}"
+do
+	if [[ $i =~ ^puzzle ]]; then
+   		PUZZLE=$((PUZZLE+1))
+	fi
+done
 
 DIR="./$YEAR/puzzle$PUZZLE"
 mkdir -p $DIR/__TESTS__
