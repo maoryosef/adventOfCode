@@ -26,7 +26,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
     - run: npm run lint
-    - run: npm run test:all --json --outputFile=result.json --testLocationInResults
+    - run: npm run test:all -- --json --outputFile=result.json --testLocationInResults
     - uses: tanmen/jest-reporter@v1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
