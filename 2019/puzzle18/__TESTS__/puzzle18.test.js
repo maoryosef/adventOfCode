@@ -15,7 +15,7 @@ const [testInputs, realInput] = _(__dirname)
 
 const getPath = filename => `${__dirname}/${filename}`;
 
-describe('puzzle 18', () => {
+xdescribe('puzzle 18', () => {
 	describe('part 1', () => {
 		if (testInputs.length > 0) {
 			const answers = [
