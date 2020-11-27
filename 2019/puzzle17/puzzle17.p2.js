@@ -139,30 +139,30 @@ function solve(inputFilename, inputStr) {
 	return res;
 }
 
-(function() {
-	const input = 'R,6,L,6,L,10,L,8,L,6,L,10,L,6,R,6,L,6,L,10,L,8,L,6,L,10,L,6,R,6,L,8,L,10,R,6,R,6,L,6,L,10,L,8,L,6,L,10,L,6,R,6,L,8,L,10,R,6,R,6,L,6,L,10,R,6,L,8,L,10,R,6'.split(',');
-	const inputStr = input.join('');
-	const originalInput = input.slice(0);
+// (function() {
+// 	const input = 'R,6,L,6,L,10,L,8,L,6,L,10,L,6,R,6,L,6,L,10,L,8,L,6,L,10,L,6,R,6,L,8,L,10,R,6,R,6,L,6,L,10,L,8,L,6,L,10,L,6,R,6,L,8,L,10,R,6,R,6,L,6,L,10,R,6,L,8,L,10,R,6'.split(',');
+// 	const inputStr = input.join('');
+// 	const originalInput = input.slice(0);
 
-	let currentSeq = '';
-	let idx = 0;
-	let start = 0;
-	while (input.length) {
-		const nextChar = input.shift();
+// 	let currentSeq = '';
+// 	let idx = 0;
+// 	let start = 0;
+// 	while (input.length) {
+// 		const nextChar = input.shift();
 
-		idx++;
-		if (inputStr.indexOf(currentSeq + nextChar, idx) > -1) {
-			currentSeq += nextChar;
-		} else {
-			console.log('found seq', start, idx, currentSeq);
-			console.log(originalInput.slice(start, idx).join(','));
-			currentSeq = '';
-			start = idx = idx + 1;
-		}
-	}
+// 		idx++;
+// 		if (inputStr.indexOf(currentSeq + nextChar, idx) > -1) {
+// 			currentSeq += nextChar;
+// 		} else {
+// 			console.log('found seq', start, idx, currentSeq);
+// 			console.log(originalInput.slice(start, idx).join(','));
+// 			currentSeq = '';
+// 			start = idx = idx + 1;
+// 		}
+// 	}
 
-	console.log(currentSeq);
-})();
+// 	console.log(currentSeq);
+// })();
 module.exports = {
 	solve
 };
