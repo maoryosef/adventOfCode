@@ -24,6 +24,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Hello world action step
+      uses: ./jest-reporter # Uses an action in the root directory
+      id: hello
+      with:
+        who-to-greet: 'Mona the Octocat'
+      # Use the output from the `hello` step
+    - name: Get the output time
+      run: echo "The time was ${{ steps.hello.outputs.time }}"
     - run: npm install
     - run: npm run lint
     - run: npm run test:all -- --json --outputFile=result.json --testLocationInResults
