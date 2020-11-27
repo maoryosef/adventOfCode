@@ -5,10 +5,11 @@
 	"main": "index.js",
 	"scripts": {
 		"gen": "./scripts/gen.sh",
+		"lint": "eslint . --cache",
 		"test": "./scripts/test-current.sh",
 		"test:year": "./scripts/test-year.sh",
 		"test:all": "jest",
-		"precommit": "eslint . --cache"
+		"precommit": "npm run lint"
 	},
 	"keywords": [],
 	"author": "",
