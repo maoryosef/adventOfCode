@@ -6,10 +6,12 @@ const _ = require('lodash');
 function solve(inputFilename, inputStr) {
 	const input = inputStr || fs.readFileSync(inputFilename, 'utf-8');
 
-	const res = _(input)
+	const parsedInput = _(input)
 		.split('\n')
 		.map(num => parseInt(num))
-		.reduce((acc, val) => acc + val, 0);
+		.value();
+
+	const res = parsedInput.reduce((acc, val) => acc + val, 0);
 
 	return res;
 }
