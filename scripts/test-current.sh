@@ -10,4 +10,4 @@ do
 	fi
 done
 
-yarn test:all $YEAR/puzzle$PUZZLE
+yarn test:all $YEAR/puzzle$PUZZLE $*

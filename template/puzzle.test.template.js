@@ -24,20 +24,20 @@ describe('puzzle <PNUM>', () => {
 			const inputsWithAnswers = _.zip(testInputs, answers);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
-				const res = solverP1.solve(getPath(testInputFilename));
+				const res = solverP1.exec(getPath(testInputFilename));
 
 				expect(res).toBe(expected);
 			});
 		}
 
-		test('real input', () => {
-			const res = solverP1.solve(getPath(realInput[0]));
+		test.skip('real input', () => {
+			const res = solverP1.exec(getPath(realInput[0]));
 
 			expect(res).toBe(true);
 		});
 	});
 
-	describe('part 2', () => {
+	xdescribe('part 2', () => {
 		if (testInputs.length > 0) {
 			const answers = [
 			];
@@ -45,14 +45,14 @@ describe('puzzle <PNUM>', () => {
 			const inputsWithAnswers = _.zip(testInputs, answers);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
-				const res = solverP2.solve(getPath(testInputFilename));
+				const res = solverP2.exec(getPath(testInputFilename));
 
 				expect(res).toBe(expected);
 			});
 		}
 
-		test('real input', () => {
-			const res = solverP2.solve(getPath(realInput[0]));
+		test.skip('real input', () => {
+			const res = solverP2.exec(getPath(realInput[0]));
 
 			expect(res).toBe(true);
 		});

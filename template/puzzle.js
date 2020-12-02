@@ -3,19 +3,25 @@
 const fs = require('fs');
 const _ = require('lodash');
 
-function solve(inputFilename, inputStr) {
+function parseInput(row) {
+	return parseInt(row);
+}
+
+function solve(input) {
+	return input;
+}
+
+function exec(inputFilename, inputStr) {
 	const input = inputStr || fs.readFileSync(inputFilename, 'utf-8');
 
 	const parsedInput = _(input)
 		.split('\n')
-		.map(num => parseInt(num))
+		.map(parseInput)
 		.value();
 
-	const res = parsedInput.reduce((acc, val) => acc + val, 0);
-
-	return res;
+	return solve(parsedInput);
 }
 
 module.exports = {
-	solve
+	exec
 };
