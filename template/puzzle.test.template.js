@@ -4,8 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const each = require('jest-each').default;
 const _ = require('lodash');
-const solverP1 = require('../puzzle<PNUM>.p1');
-const solverP2 = require('../puzzle<PNUM>.p2');
+const solver = require('../puzzle<PNUM>');
 
 const [testInputs, realInput] = _(__dirname)
 	.thru(fs.readdirSync)
@@ -24,20 +23,20 @@ describe('puzzle <PNUM>', () => {
 			const inputsWithAnswers = _.zip(testInputs, answers);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
-				const res = solverP1.exec(getPath(testInputFilename));
+				const res = solver.exec1(getPath(testInputFilename));
 
 				expect(res).toBe(expected);
 			});
 		}
 
-		test.skip('real input', () => {
-			const res = solverP1.exec(getPath(realInput[0]));
+		test('real input', () => {
+			const res = solver.exec1(getPath(realInput[0]));
 
 			expect(res).toBe(true);
 		});
 	});
 
-	xdescribe('part 2', () => {
+	describe('part 2', () => {
 		if (testInputs.length > 0) {
 			const answers = [
 			];
@@ -45,14 +44,14 @@ describe('puzzle <PNUM>', () => {
 			const inputsWithAnswers = _.zip(testInputs, answers);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
-				const res = solverP2.exec(getPath(testInputFilename));
+				const res = solver.exec2(getPath(testInputFilename));
 
 				expect(res).toBe(expected);
 			});
 		}
 
-		test.skip('real input', () => {
-			const res = solverP2.exec(getPath(realInput[0]));
+		test('real input', () => {
+			const res = solver.exec2(getPath(realInput[0]));
 
 			expect(res).toBe(true);
 		});

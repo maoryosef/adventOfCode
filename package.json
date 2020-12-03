@@ -4,6 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
+		"start": "yarn test --watch",
 		"gen": "./scripts/gen.sh",
 		"lint": "eslint . --cache",
 		"test": "./scripts/test-current.sh",

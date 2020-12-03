@@ -7,11 +7,15 @@ function parseInput(row) {
 	return parseInt(row);
 }
 
-function solve(input) {
+function solve1(input) {
 	return input;
 }
 
-function exec(inputFilename, inputStr) {
+function solve2(input) {
+	return input;
+}
+
+function exec(inputFilename, solver, inputStr) {
 	const input = inputStr || fs.readFileSync(inputFilename, 'utf-8');
 
 	const parsedInput = _(input)
@@ -19,9 +23,10 @@ function exec(inputFilename, inputStr) {
 		.map(parseInput)
 		.value();
 
-	return solve(parsedInput);
+	return solver(parsedInput);
 }
 
 module.exports = {
-	exec
+	exec1: (inputFilename) => exec(inputFilename, solve1),
+	exec2: (inputFilename) => exec(inputFilename, solve2)
 };
