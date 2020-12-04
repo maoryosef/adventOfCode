@@ -3,8 +3,17 @@
 const fs = require('fs');
 const _ = require('lodash');
 
-function parseInput(row) {
+function parseRow(row) {
 	return parseInt(row);
+}
+
+function parseInput(input) {
+	const parsedInput = _(input)
+		.split('\n')
+		.map(parseRow)
+		.value();
+
+	return parsedInput;
 }
 
 function solve1(input) {
@@ -18,10 +27,7 @@ function solve2(input) {
 function exec(inputFilename, solver, inputStr) {
 	const input = inputStr || fs.readFileSync(inputFilename, 'utf-8');
 
-	const parsedInput = _(input)
-		.split('\n')
-		.map(parseInput)
-		.value();
+	const parsedInput = parseInput(input);
 
 	return solver(parsedInput);
 }
