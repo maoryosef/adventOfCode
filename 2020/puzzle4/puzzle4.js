@@ -4,83 +4,67 @@ const fs = require('fs');
 const _ = require('lodash');
 
 function parseRow(row) {
-	if (_.trim(row).length > 0) {
-		return _(row)
-			.split(' ')
-			.map(pair => pair.split(':'))
-			.fromPairs()
-			.value();
-	}
-
-	return null;
+	return _(row)
+		.split('\n')
+		.flatMap(p => p.split(' '))
+		.map(p => p.split(':'))
+		.fromPairs()
+		.assign()
+		.value();
 }
 
 function parseInput(input) {
-	const parsedInput = _(input)
-		.split('\n')
-		.map(parseRow)
-		.reduce((acc, val) => {
-			if (!val) {
-				acc.push({});
-			}
-
-			acc[acc.length - 1] = {...acc[acc.length - 1], ...val};
-
-			return acc;
-		}, [{}]);
+	const parsedInput = input
+		.split('\n\n')
+		.map(parseRow);
 
 	return parsedInput;
 }
 
-function validate(input, requiredFields, validators) {
-	return input.reduce((acc, val) => {
-		const numOfRequiredFields = _(val)
-			.pick(requiredFields)
-			.keys()
-			.value();
-
-		if (numOfRequiredFields.length === requiredFields.length) {
-			if (!validators) {
-				acc++;
-			} else if (_.every(validators, (v, k) => v(val[k]))) {
-				acc++;
-			}
-		}
-
-		return acc;
-	}, 0);
+function validate(input, validators) {
+	return input.filter(passport => _.every(validators, (v, k) => v(passport[k]))).length;
 }
 
-const checkYear = (v, from, to) => v.length === 4 && parseInt(v) >= from && parseInt(v) <= to;
-
-const validators = {
-	byr: v => checkYear(v, 1920, 2002),
-	iyr: v => checkYear(v, 2010, 2020),
-	eyr: v => checkYear(v, 2020, 2030),
-	hgt: v => {
-		const matchers = /^(\d+)(cm|in)$/i.exec(v);
-
-		if (matchers) {
-			const height = parseInt(matchers[1]);
-
-			return matchers[2] === 'cm' ?
-				height >= 150 && height <= 193 :
-				height >= 59 && height <= 76;
-		}
-
-		return false;
-	},
-	hcl: v => /^#[0-9a-f]{6}$/i.test(v),
-	ecl: v => /^(amb|blu|brn|gry|grn|hzl|oth)$/.test(v),
-	pid: v => v.length === 9
-};
-
 function solve1(input) {
-	return validate(input, _.keys(validators));
+	const validators = {
+		byr: v => !!v,
+		iyr: v => !!v,
+		eyr: v => !!v,
+		hgt: v => !!v,
+		hcl: v => !!v,
+		ecl: v => !!v,
+		pid: v => !!v
+	};
+
+	return validate(input, validators);
 }
 
 function solve2(input) {
-	return validate(input, _.keys(validators), validators);
+	const checkYear = (v, from, to) => v && v.length === 4 && parseInt(v) >= from && parseInt(v) <= to;
+
+	const validators = {
+		byr: v => checkYear(v, 1920, 2002),
+		iyr: v => checkYear(v, 2010, 2020),
+		eyr: v => checkYear(v, 2020, 2030),
+		hgt: v => {
+			const matches = /^(\d+)(cm|in)$/i.exec(v);
+
+			if (matches) {
+				const height = parseInt(matches[1]);
+
+				return matches[2] === 'cm' ?
+					height >= 150 && height <= 193 :
+					height >= 59 && height <= 76;
+			}
+
+			return false;
+		},
+		hcl: v => /^#[0-9a-f]{6}$/i.test(v),
+		ecl: v => /^(amb|blu|brn|gry|grn|hzl|oth)$/.test(v),
+		pid: v => /^\d{9}$/.test(v)
+	};
+
+	return validate(input, validators);
 }
 
 function exec(inputFilename, solver, inputStr) {
