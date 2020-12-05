@@ -11,55 +11,25 @@ const OP_CODE_MAP = {
 };
 
 function parseRow(row) {
-	return row.split('').map(c => OP_CODE_MAP[c]);
+	return parseInt(row.split('').map(c => OP_CODE_MAP[c]).join(''), 2);
 }
 
 function parseInput(input) {
 	const parsedInput = _(input)
 		.split('\n')
 		.map(parseRow)
+		.sort((a, b) => a - b)
 		.value();
 
 	return parsedInput;
 }
 
-function binaryWalk(steps, base = 127) {
-	let high = base;
-	let low = 0;
-
-	for (let step of steps) {
-		if (step) {
-			low = Math.ceil((low + high) / 2);
-		} else {
-			high = Math.floor((low + high) / 2);
-		}
-	}
-
-	return steps[steps.length - 1] ? high : low;
-}
-
-const calcSeats = input => _(input)
-	.map(boardingPass => {
-		const row = binaryWalk(boardingPass.slice(0, 7));
-		const col = binaryWalk(boardingPass.slice(7), 7);
-
-		return row * 8 + col;
-	})
-	.sort((a, b) => a - b)
-	.value();
-
 function solve1(input) {
-	return _.last(calcSeats(input));
+	return input[input.length - 1];
 }
 
 function solve2(input) {
-	const seats = calcSeats(input);
-
-	for (let i = 1; i < seats.length; i++) {
-		if (seats[i] !== seats[i - 1] + 1) {
-			return seats[i] - 1;
-		}
-	}
+	return input.find((s, i) => s + 1 !== input[i + 1]) + 1;
 }
 
 function exec(inputFilename, solver, inputStr) {
