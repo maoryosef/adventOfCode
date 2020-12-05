@@ -3,7 +3,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 
-const OP_CODE_MAP = {
+const OP_2_BIT = {
 	F: 0,
 	B: 1,
 	L: 0,
@@ -11,7 +11,7 @@ const OP_CODE_MAP = {
 };
 
 function parseRow(row) {
-	return parseInt(row.split('').map(c => OP_CODE_MAP[c]).join(''), 2);
+	return parseInt(row.split('').map(c => OP_2_BIT[c]).join(''), 2);
 }
 
 function parseInput(input) {
