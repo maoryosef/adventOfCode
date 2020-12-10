@@ -74,12 +74,37 @@ function solve2(input) {
 	return countMoves(diffMap, 0);
 }
 
+function solve2_iterative(adapter) {
+	const rating = adapter.sort((a, b) => a - b)[adapter.length - 1] + 3;
+	adapter.push(rating);
+	let dp = new Map();
+	dp.set(0, 1);
+	for (let x of adapter) {
+		const val = (dp.get(x - 1) || 0) + (dp.get(x - 2) || 0) + (dp.get(x - 3) || 0);
+		dp.set(x, val);
+	}
+
+	return dp.get(adapter[adapter.length - 1]);
+}
+
 function exec(inputFilename, solver, inputStr) {
 	const input = inputStr || fs.readFileSync(inputFilename, 'utf-8');
 
 	const parsedInput = parseInput(input);
 
 	return solver(parsedInput);
+}
+
+if (!global.TEST_MODE) {
+	const inputFile = 'input.test.1.txt';
+	const {join} = require('path');
+
+	const res = exec(
+		join(__dirname, '__TESTS__', inputFile),
+		solve2_iterative
+	);
+
+	console.log(res);
 }
 
 module.exports = {
