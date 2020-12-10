@@ -32,6 +32,18 @@ function exec(inputFilename, solver, inputStr) {
 	return solver(parsedInput);
 }
 
+if (!global.TEST_MODE) {
+	const inputFile = 'input.test.1.txt';
+	const {join} = require('path');
+
+	const res = exec(
+		join(__dirname, '__TESTS__', inputFile),
+		solve1
+	);
+
+	console.log(res);
+}
+
 module.exports = {
 	exec1: (inputFilename) => exec(inputFilename, solve1),
 	exec2: (inputFilename) => exec(inputFilename, solve2)

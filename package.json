@@ -20,6 +20,11 @@
 		"js-combinatorics": "^0.5.4",
 		"lodash": "^4.17.4"
 	},
+	"jest": {
+		"globals": {
+			"TEST_MODE": true
+		}
+	},
 	"devDependencies": {
 		"eslint": "^4.13.1",
 		"husky": "^0.14.3",
