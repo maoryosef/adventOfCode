@@ -63,7 +63,7 @@ function countMoves(tree, node, calcCache = {}) {
 }
 
 function solve2(input) {
-	const adapters = [0, ...input, input[input.length - 1] + 3];
+	const adapters = [0, ...input];
 
 	const diffMap = _.assign(...adapters.map((v, i) => ({
 		[i]: getNextIndices(adapters, v, i)
