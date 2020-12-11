@@ -18,3 +18,6 @@ sed "s/<PNUM>/$PUZZLE/" ./template/puzzle.test.template.js > "$DIR/__TESTS__/puz
 
 touch "$DIR/__TESTS__/input.test.1.txt"
 touch "$DIR/__TESTS__/input.txt"
+
+SESSION=`cat ./.cookie`
+curl -b "session=$SESSION" https://adventofcode.com/$YEAR/day/$PUZZLE/input -o $DIR/__TESTS__/input.txt

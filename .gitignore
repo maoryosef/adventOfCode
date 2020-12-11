@@ -4,5 +4,6 @@ yarn.lock
 .vscode
 .DS_Store
 .eslintcache
+.cookie
 
 coverage
