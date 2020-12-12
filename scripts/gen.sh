@@ -21,3 +21,5 @@ touch "$DIR/__TESTS__/input.txt"
 
 SESSION=`cat ./.cookie`
 curl -b "session=$SESSION" https://adventofcode.com/$YEAR/day/$PUZZLE/input -o $DIR/__TESTS__/input.txt
+
+open https://adventofcode.com/$YEAR/day/$PUZZLE
