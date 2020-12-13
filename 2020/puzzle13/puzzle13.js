@@ -17,10 +17,10 @@ function parseInput(input) {
 }
 
 function solve1({estimate, busses}) {
-	const departingBusses = busses.filter(b => !isNaN(b))
+	const firstBus = busses.filter(b => !isNaN(b))
 		.map(b => ({id: b, departure: Math.ceil(estimate / b) * b - estimate}))
-		.sort((a, b) => a.departure - b.departure);
-	const firstBus = departingBusses[0];
+		.sort((a, b) => a.departure - b.departure)
+		.shift();
 
 	return firstBus.id * firstBus.departure;
 }
