@@ -1,4 +1,4 @@
-YEAR=`date +'%Y'`
+YEAR=2015
 
 PUZZLES=(`ls $YEAR`)
 
