@@ -14,23 +14,16 @@ function parseInput(input) {
 
 function solve1(input, turns = 2020) {
 	const mem = new Map();
-	let turn = 1;
 
-	input.forEach(num => mem.set(num, turn++));
+	input.forEach((num, idx) => mem.set(num, idx + 1));
 
 	let nextNum = 0;
+	let prevNum;
 
-	while (turn < turns) {
-		if (mem.get(nextNum)) {
-			const numToUpdate = nextNum;
-			nextNum = turn - mem.get(nextNum);
-			mem.set(numToUpdate, turn);
-		} else {
-			mem.set(nextNum, turn);
-			nextNum = 0;
-		}
-
-		turn++;
+	for (let turn = input.length + 1; turn < turns; turn++) {
+		prevNum = nextNum;
+		nextNum = mem.has(nextNum) ? turn - mem.get(nextNum) : 0;
+		mem.set(prevNum, turn);
 	}
 
 	return nextNum;
@@ -54,7 +47,7 @@ if (!global.TEST_MODE) {
 
 	const res = exec(
 		join(__dirname, '__TESTS__', inputFile),
-		solve2
+		solve1
 	);
 
 	console.log(res);
