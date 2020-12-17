@@ -16,8 +16,6 @@ function parseInput(input) {
 	return parsedInput;
 }
 
-const getKey = (...args) => args.join(',');
-
 function getNeighborsOffsets(dimensions) {
 	if (dimensions === 0) {
 		return [[]];
@@ -40,8 +38,8 @@ function solve1(input, dimensions = 3) {
 	input.forEach((row, y) => {
 		row.forEach((col, x) => {
 			if (col === '#') {
-				const coords = [x, y, ...Array(dimensions - 2).fill(0)];
-				prevDimensions.set(getKey(...coords), true);
+				const key = [x, y, ...Array(dimensions - 2).fill(0)].join(',');
+				prevDimensions.set(key, true);
 			}
 		});
 	});
@@ -52,11 +50,11 @@ function solve1(input, dimensions = 3) {
 		nextDimensions = new Map();
 		activeMap = new Map();
 
-		for (let key of prevDimensions.keys()) {
+		for (const key of prevDimensions.keys()) {
 			if (prevDimensions.get(key)) {
 				const coords = key.split(',').map(x => +x);
 				offsets.forEach(offset => {
-					const nKey = getKey(...offset.map((v, i) => v + coords[i]));
+					const nKey = [...offset.map((v, i) => v + coords[i])].join(',');
 
 					if (nKey !== key) {
 						const v = activeMap.get(nKey) || 0;
@@ -66,14 +64,14 @@ function solve1(input, dimensions = 3) {
 			}
 		}
 
-		for (let key of prevDimensions.keys()) {
+		for (const key of prevDimensions.keys()) {
 			const actives = activeMap.get(key);
 			if (prevDimensions.get(key)) {
 				nextDimensions.set(key, (actives === 2 || actives === 3));
 			}
 		}
 
-		for (let [key, actives] of activeMap.entries()) {
+		for (const [key, actives] of activeMap.entries()) {
 			if (!prevDimensions.get(key) && actives === 3) {
 				nextDimensions.set(key, true);
 			}
