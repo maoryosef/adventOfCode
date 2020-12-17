@@ -23,7 +23,7 @@ function parseInput(input) {
 	return parsedInput;
 }
 
-function getAllRoutes(graph, from, to, visited = {}, currentPath = [from]) {
+function getAllRoutes(graph, from, to, visited = {}, currentPath = [0]) {
 	const foundPaths = [];
 	visited[from] = true;
 
@@ -33,9 +33,7 @@ function getAllRoutes(graph, from, to, visited = {}, currentPath = [from]) {
 
 	for (const route of Object.keys(graph[from])) {
 		if (!visited[route]) {
-			currentPath.push(route);
-			foundPaths.push(...getAllRoutes(graph, route, to, {...visited}, [...currentPath]));
-			currentPath.pop();
+			foundPaths.push(...getAllRoutes(graph, route, to, {...visited}, [...currentPath, graph[from][route]]));
 		}
 	}
 
@@ -44,22 +42,17 @@ function getAllRoutes(graph, from, to, visited = {}, currentPath = [from]) {
 	return foundPaths;
 }
 
-function getRoutesWithDistance(input) {
-	const locations = new Set();
-
+function getDistances(input) {
 	const graph = input.reduce((acc, edge) => {
 		acc[edge.from] = {...acc[edge.from], [edge.to]: edge.d};
 		acc[edge.to] = {...acc[edge.to], [edge.from]: edge.d};
-
-		locations.add(edge.from);
-		locations.add(edge.to);
 
 		return acc;
 	}, {});
 
 	const possibleRoutes = [];
-	for (const start of locations) {
-		for (const end of locations) {
+	for (const start of Object.keys(graph)) {
+		for (const end of Object.keys(graph)) {
 			if (start === end) {
 				continue;
 			}
@@ -68,30 +61,17 @@ function getRoutesWithDistance(input) {
 		}
 	}
 
-	const validRoutes = possibleRoutes.filter(r => r.length === locations.size);
-
-	return validRoutes.map(r => {
-		let d = 0;
-		for (let i = 0; i < r.length - 1; i++) {
-			const from = r[i];
-			const to = r[i + 1];
-
-			d += graph[from][to];
-		}
-
-		return {
-			d,
-			r
-		};
-	});
+	return possibleRoutes
+		.filter((r) => r.length === Object.keys(graph).length)
+		.map((r) => r.reduce((acc, v) => acc + v, 0));
 }
 
 function solve1(input) {
-	return getRoutesWithDistance(input).sort((a, b) => a.d - b.d)[0].d;
+	return getDistances(input).sort((a, b) => a - b)[0];
 }
 
 function solve2(input) {
-	return getRoutesWithDistance(input).sort((a, b) => b.d - a.d)[0].d;
+	return getDistances(input).sort((a, b) => b - a)[0];
 }
 
 function exec(inputFilename, solver, inputStr) {
