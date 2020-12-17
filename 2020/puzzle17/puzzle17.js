@@ -18,7 +18,7 @@ function parseInput(input) {
 
 const key = (...args) => args.join(',');
 
-function solve1(input, cycles = 6) {
+function solve1(input) {
 	let prevDimensions = new Map();
 	let nextDimensions;
 	let activeMap;
@@ -31,7 +31,7 @@ function solve1(input, cycles = 6) {
 		});
 	});
 
-	for (let c = 0; c < cycles; c++) {
+	for (let c = 0; c < 6; c++) {
 		nextDimensions = new Map();
 		activeMap = new Map();
 		const keys = [...prevDimensions.keys()].map(k => k.split(',').map(k => +k));
