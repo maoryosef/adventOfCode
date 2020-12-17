@@ -16,9 +16,23 @@ function parseInput(input) {
 	return parsedInput;
 }
 
-const key = (...args) => args.join(',');
+const getKey = (...args) => args.join(',');
 
-function solve1(input) {
+function getNeighborsOffsets(dimensions) {
+	if (dimensions === 0) {
+		return [[]];
+	}
+
+	const offsets = getNeighborsOffsets(dimensions - 1);
+
+	return [
+		...offsets.map(x => [-1, ...x]),
+		...offsets.map(x => [0, ...x]),
+		...offsets.map(x => [1, ...x]),
+	];
+}
+
+function solve1(input, dimensions = 3) {
 	let prevDimensions = new Map();
 	let nextDimensions;
 	let activeMap;
@@ -26,43 +40,42 @@ function solve1(input) {
 	input.forEach((row, y) => {
 		row.forEach((col, x) => {
 			if (col === '#') {
-				prevDimensions.set(key(x, y, 0), true);
+				const coords = [x, y, ...Array(dimensions - 2).fill(0)];
+				prevDimensions.set(getKey(...coords), true);
 			}
 		});
 	});
 
+	const offsets = getNeighborsOffsets(dimensions);
+
 	for (let c = 0; c < 6; c++) {
 		nextDimensions = new Map();
 		activeMap = new Map();
-		const keys = [...prevDimensions.keys()].map(k => k.split(',').map(k => +k));
-		keys.forEach(([x, y, z]) => {
-			if (prevDimensions.get(key(x, y, z))) {
-				for (let i = x - 1; i < x + 2; i++) {
-					for (let j = y - 1; j < y + 2; j++) {
-						for (let l = z - 1; l < z + 2; l++) {
-							if (i === x && j === y && l === z) {
-								continue;
-							}
 
-							const nKey = key(i, j, l);
-							const v = activeMap.get(nKey) || 0;
-							activeMap.set(nKey, v + 1);
-						}
+		for (let key of prevDimensions.keys()) {
+			if (prevDimensions.get(key)) {
+				const coords = key.split(',').map(x => +x);
+				offsets.forEach(offset => {
+					const nKey = getKey(...offset.map((v, i) => v + coords[i]));
+
+					if (nKey !== key) {
+						const v = activeMap.get(nKey) || 0;
+						activeMap.set(nKey, v + 1);
 					}
-				}
-			}
-		});
-
-		for (let [k] of prevDimensions.entries()) {
-			const v = activeMap.get(k);
-			if (prevDimensions.get(k)) {
-				nextDimensions.set(k, (v === 2 || v === 3));
+				});
 			}
 		}
 
-		for (let [k, v] of activeMap.entries()) {
-			if (!prevDimensions.get(k) && v === 3) {
-				nextDimensions.set(k, true);
+		for (let key of prevDimensions.keys()) {
+			const actives = activeMap.get(key);
+			if (prevDimensions.get(key)) {
+				nextDimensions.set(key, (actives === 2 || actives === 3));
+			}
+		}
+
+		for (let [key, actives] of activeMap.entries()) {
+			if (!prevDimensions.get(key) && actives === 3) {
+				nextDimensions.set(key, true);
 			}
 		}
 
@@ -73,59 +86,7 @@ function solve1(input) {
 }
 
 function solve2(input) {
-	let prevDimensions = new Map();
-	let nextDimensions;
-	let activeMap;
-
-	input.forEach((row, y) => {
-		row.forEach((col, x) => {
-			if (col === '#') {
-				prevDimensions.set(key(x, y, 0, 0), true);
-			}
-		});
-	});
-
-	for (let c = 0; c < 6; c++) {
-		nextDimensions = new Map();
-		activeMap = new Map();
-		const keys = [...prevDimensions.keys()].map(k => k.split(',').map(k => +k));
-		keys.forEach(([x, y, z, w]) => {
-			if (prevDimensions.get(key(x, y, z, w))) {
-				for (let i = x - 1; i < x + 2; i++) {
-					for (let j = y - 1; j < y + 2; j++) {
-						for (let l = z - 1; l < z + 2; l++) {
-							for (let m = w - 1; m < w + 2; m++) {
-								if (i === x && j === y && l === z && m === w) {
-									continue;
-								}
-
-								const nKey = key(i, j, l, m);
-								const v = activeMap.get(nKey) || 0;
-								activeMap.set(nKey, v + 1);
-							}
-						}
-					}
-				}
-			}
-		});
-
-		for (let [k] of prevDimensions.entries()) {
-			const v = activeMap.get(k);
-			if (prevDimensions.get(k)) {
-				nextDimensions.set(k, (v === 2 || v === 3));
-			}
-		}
-
-		for (let [k, v] of activeMap.entries()) {
-			if (!prevDimensions.get(k) && v === 3) {
-				nextDimensions.set(k, true);
-			}
-		}
-
-		prevDimensions = nextDimensions;
-	}
-
-	return [...nextDimensions.values()].filter(x => !!x).length;
+	return solve1(input, 4);
 }
 
 function exec(inputFilename, solver, inputStr) {
