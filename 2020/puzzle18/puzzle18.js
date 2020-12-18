@@ -11,109 +11,109 @@ function parseInput(input) {
 	return parsedInput;
 }
 
-function evaluateExpression(str) {
-	let sum = 0;
-	let op;
-	for (let i = 0; i < str.length; i++) {
-		const c = str.charAt(i);
-		if (c === ' ') {
-			continue;
-		}
+const OP = {
+	'+': (a, b) => a + b,
+	'*': (a, b) => a * b
+};
 
-		if (c === '+' || c === '*') {
-			op = c;
-			continue;
-		}
-
-		if (c === ')') {
-			return {sum, i};
-		}
-
-		let d;
-
-		if (c === '(') {
-			const val = evaluateExpression(str.substr(i + 1));
-			d = val.sum;
-			i += val.i + 1;
-		} else {
-			d = +c;
-		}
-
-		if (!op) {
-			sum = d;
-		} else {
-			if (op === '+') {
-				sum += d;
+function tokenize(str) {
+	return str
+		.replace(/\s+/g, '')
+		.split('')
+		.reduce((acc, v) => {
+			if (!isNaN(+v)) {
+				acc.push({t: 'L', v});
+			} else if (OP[v]) {
+				acc.push({t: 'O', v});
 			} else {
-				sum *= d;
+				acc.push({t: v});
 			}
-			op = null;
+
+			return acc;
+		}, []);
+}
+
+const peek = stack => stack.slice(-1)[0];
+
+function parseExpression(expr, precedence) {
+	const outStack = [];
+	const opStack = [];
+	const tokens = tokenize(expr);
+
+	tokens.forEach(({t, v}) => {
+		if (t === 'L') {
+			outStack.push({v: +v, rightNode: null, leftNode: null});
+			return;
 		}
+
+		if (t === 'O') {
+			while (OP[peek(opStack)] && precedence[v] <= precedence[peek(opStack)]) {
+				outStack.push({
+					v: opStack.pop(),
+					rightNode: outStack.pop(),
+					leftNode: outStack.pop()
+				});
+			}
+
+			opStack.push(v);
+			return;
+		}
+
+		if (t === '(') {
+			opStack.push(t);
+			return;
+		}
+
+		if (t === ')') {
+			while (peek(opStack) !== '(') {
+				outStack.push({
+					v: opStack.pop(),
+					rightNode: outStack.pop(),
+					leftNode: outStack.pop()
+				});
+			}
+
+			opStack.pop();
+			return;
+		}
+	});
+
+	while (opStack.length > 0) {
+		outStack.push({
+			v: opStack.pop(),
+			rightNode: outStack.pop(),
+			leftNode: outStack.pop()
+		});
 	}
 
-	return {sum, i: str.length};
+	return outStack.pop();
+}
+
+function calcAst(ast) {
+	if (!ast.rightNode && !ast.leftNode) {
+		return ast.v;
+	}
+
+	return OP[ast.v](
+		calcAst(ast.rightNode),
+		calcAst(ast.leftNode)
+	);
+}
+
+function calcExpression(expr, precedence = {'+': 1, '*': 1}) {
+	return calcAst(parseExpression(expr, precedence));
 }
 
 function solve1(input) {
 	return input
-		.map(row => evaluateExpression(row))
-		.reduce((acc, {sum}) => acc + sum, 0);
-}
-
-function evaluateExpression2(str, fromParen = true) {
-	let sum = 0;
-	let op;
-	for (let i = 0; i < str.length; i++) {
-		const c = str.charAt(i);
-		if (c === ' ') {
-			continue;
-		}
-
-		if (c === '+') {
-			op = c;
-			continue;
-		}
-
-		if (c === ')') {
-			if (fromParen) {
-				return {sum, i};
-			}
-
-			return {sum, i: i - 1};
-		}
-
-		let d;
-
-		if (c === '(' || c === '*') {
-			const val = evaluateExpression2(str.substr(i + 1), c === '(');
-			d = val.sum;
-			i += val.i + 1;
-			if (c === '*') {
-				op = '*';
-			}
-		} else {
-			d = +c;
-		}
-
-		if (!op) {
-			sum = d;
-		} else {
-			if (op === '+') {
-				sum += d;
-			} else {
-				sum *= d;
-			}
-			op = null;
-		}
-	}
-
-	return {sum, i: str.length};
+		.map(row => calcExpression(row))
+		.reduce((acc, v) => acc + v, 0);
 }
 
 function solve2(input) {
 	return input
-		.map(row => evaluateExpression2(row))
-		.reduce((acc, { sum }) => acc + sum, 0);
+		.map(row => calcExpression(row, {'+': 2, '*': 1}))
+		.reduce((acc, v) => acc + v, 0);
 }
 
 function exec(inputFilename, solver, inputStr) {
@@ -130,7 +130,8 @@ if (!global.TEST_MODE) {
 
 	const res = exec(
 		join(__dirname, '__TESTS__', inputFile),
-		solve2
+		solve2,
+		'((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2'
 	);
 
 	console.log(res);
