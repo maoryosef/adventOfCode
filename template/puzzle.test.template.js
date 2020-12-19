@@ -16,11 +16,11 @@ const getPath = filename => `${__dirname}/${filename}`;
 
 describe('puzzle <PNUM>', () => {
 	describe('part 1', () => {
-		if (testInputs.length > 0) {
-			const answers = [
-			];
+		const testAnswers = [
+		];
 
-			const inputsWithAnswers = _.zip(testInputs, answers).filter(i => !!i[1]);
+		if (testInputs.length > 0 && testAnswers.length > 0) {
+			const inputsWithAnswers = _.zip(testInputs, testAnswers).filter(i => i[1] !== undefined);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
 				const res = solver.exec1(getPath(testInputFilename));
@@ -37,11 +37,11 @@ describe('puzzle <PNUM>', () => {
 	});
 
 	describe('part 2', () => {
-		if (testInputs.length > 0) {
-			const answers = [
-			];
+		const testAnswers = [
+		];
 
-			const inputsWithAnswers = _.zip(testInputs, answers).filter(i => !!i[1]);
+		if (testInputs.length > 0 && testAnswers.length > 0) {
+			const inputsWithAnswers = _.zip(testInputs, testAnswers).filter(i => i[1] !== undefined);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
 				const res = solver.exec2(getPath(testInputFilename));
