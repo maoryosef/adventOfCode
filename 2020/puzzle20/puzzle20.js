@@ -59,65 +59,32 @@ function getEdgesByTile(edgesMap) {
 	}, {});
 }
 
-function getCorners(edgesMap, edgeByTile, numOfUnmatched = 2) {
-	const adjacentMap = {};
-
-	const corners = Object.keys(edgesMap).filter(key => {
-		const {top, bottom, left, right} = edgesMap[key];
-		const topReversed = top.split('').reverse().join('');
-		const bottomReversed = bottom.split('').reverse().join('');
-		const leftReversed = left.split('').reverse().join('');
-		const rightReversed = right.split('').reverse().join('');
+function getAdjacentsMap(edgesMap, edgeByTile) {
+	return Object.entries(edgesMap).reduce((acc, [key, edges]) => {
 		const adjacent = {};
-		let unMatched = 0;
+		['top', 'bottom', 'left', 'right'].forEach(sideKey => {
+			const side = edges[sideKey];
+			const sideReversed = side.split('').reverse().join('');
 
-		if (edgeByTile[top].length === 1 && (!edgeByTile[topReversed] || (edgeByTile[topReversed].length === 1 && edgeByTile[topReversed].includes(key)))) {
-			unMatched++;
-		} else {
-			const topAdjacent = edgeByTile[top].filter(x => x !== key);
-			const topReveresedAdjacent = edgeByTile[topReversed]?.filter(x => x !== key) || [];
-			adjacent.top = topAdjacent[0] || topReveresedAdjacent[0];
-		}
+			if (edgeByTile[side].length > 1 || (edgeByTile[sideReversed] && edgeByTile[sideReversed].length)) {
+				const sideAdjacent = edgeByTile[side].filter(x => x !== key);
+				const sideReveresedAdjacent = edgeByTile[sideReversed]?.filter(x => x !== key) || [];
+				adjacent[sideKey] = sideAdjacent[0] || sideReveresedAdjacent[0];
+			}
+		});
 
-		if (edgeByTile[bottom].length === 1 && (!edgeByTile[bottomReversed] || (edgeByTile[bottomReversed].length === 1 && edgeByTile[bottomReversed].includes(key)))) {
-			unMatched++;
-		} else {
-			const bottomAdjacent = edgeByTile[bottom].filter(x => x !== key);
-			const bottomReveresedAdjacent = edgeByTile[bottomReversed]?.filter(x => x !== key) || [];
+		acc[key] = adjacent;
 
-			adjacent.bottom = bottomAdjacent[0] || bottomReveresedAdjacent[0];
-		}
-
-		if (edgeByTile[right].length === 1 && (!edgeByTile[rightReversed] || (edgeByTile[rightReversed].length === 1 && edgeByTile[rightReversed].includes(key)))) {
-			unMatched++;
-		} else {
-			const rightAdjacent = edgeByTile[right].filter(x => x !== key);
-			const rightReveresedAdjacent = edgeByTile[rightReversed]?.filter(x => x !== key) || [];
-			adjacent.right = rightAdjacent[0] || rightReveresedAdjacent[0];
-		}
-
-		if (edgeByTile[left].length === 1 && (!edgeByTile[leftReversed] || (edgeByTile[leftReversed].length === 1 && edgeByTile[leftReversed].includes(key)))) {
-			unMatched++;
-		} else {
-			const leftAdjacent = edgeByTile[left].filter(x => x !== key);
-			const leftReveresedAdjacent = edgeByTile[leftReversed]?.filter(x => x !== key) || [];
-			adjacent.left = leftAdjacent[0] || leftReveresedAdjacent[0];
-		}
-
-		adjacentMap[key] = adjacent;
-		return unMatched === numOfUnmatched;
-	});
-
-	return {
-		corners,
-		adjacentMap
-	};
+		return acc;
+	}, {});
 }
+
 function solve1(input) {
 	const edgesMap = calcEdgesMap(input);
 	const edgeByTile = getEdgesByTile(edgesMap);
 
-	const {corners} = getCorners(edgesMap, edgeByTile);
+	const adjacentMap = getAdjacentsMap(edgesMap, edgeByTile);
+	const corners = Object.keys(adjacentMap).filter(k => Object.keys(adjacentMap[k]).length === 2);
 
 	return corners.reduce((acc, v) => acc *= +v, 1);
 }
@@ -220,7 +187,7 @@ function solve2(input) {
 	const tilesMap = input.reduce((acc, {id, tile}) => ({...acc, [id]: tile}), {});
 	const edgesMap = calcEdgesMap(input);
 	const edgeByTile = getEdgesByTile(edgesMap);
-	const {adjacentMap} = getCorners(edgesMap, edgeByTile);
+	const adjacentMap = getAdjacentsMap(edgesMap, edgeByTile);
 
 	let next = Object.keys(adjacentMap).find(k => !adjacentMap[k].top && !adjacentMap[k].left);
 	const positioned = new Set();
@@ -276,7 +243,7 @@ function exec(inputFilename, solver, inputStr) {
 }
 
 if (!global.TEST_MODE) {
-	const inputFile = 'input.txt';
+	const inputFile = 'input.test.1.txt';
 	const {join} = require('path');
 
 	const res = exec(
