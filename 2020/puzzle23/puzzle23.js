@@ -17,11 +17,11 @@ function run(cups, runs = 100) {
 
 	let head = {};
 	let currentLink = head;
-	const cupsMap = new Map();
+	const cupsMap = {};
 
 	cups.forEach(label => {
 		currentLink.next = {label};
-		cupsMap.set(label, currentLink.next);
+		cupsMap[label] = currentLink.next;
 		currentLink = currentLink.next;
 	});
 
@@ -45,7 +45,7 @@ function run(cups, runs = 100) {
 			}
 		}
 
-		const targetLink = cupsMap.get(targetCup);
+		const targetLink = cupsMap[targetCup];
 		const detachedTarget = targetLink.next;
 		targetLink.next = detachedS;
 		detachedE.next = detachedTarget;
@@ -53,7 +53,7 @@ function run(cups, runs = 100) {
 		currentLink = currentLink.next;
 	}
 
-	return cupsMap.get(1);
+	return cupsMap[1];
 }
 
 function solve1(input) {
