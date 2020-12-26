@@ -16,6 +16,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"aoc-utils": "file:utils",
 		"cli-progress": "^1.6.1",
 		"js-combinatorics": "^0.5.4",
 		"lodash": "^4.17.4"
