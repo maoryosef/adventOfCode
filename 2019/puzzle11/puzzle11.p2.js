@@ -4,7 +4,7 @@ const TEST_MODE=false;
 
 const fs = require('fs');
 const _ = require('lodash');
-const {drawAscii} = require('../../utils/drawUtils');
+const {drawAscii} = require('aoc-utils').drawUtils;
 const {runProgram, parseProgram} = require('../intCodeRunner');
 
 const input = fs.readFileSync(`${__dirname}/input${TEST_MODE ? '.test': ''}.txt`, 'utf-8');
@@ -107,4 +107,4 @@ for (let y = minY; y <= maxY; y++) {
 	}
 }
 
-console.log(drawAscii(image, WIDTH, HEIGHT, {0: ' ', 1: '#'}, 2));
+console.log(drawAscii(image, {0: ' ', 1: '#'}, 2));
