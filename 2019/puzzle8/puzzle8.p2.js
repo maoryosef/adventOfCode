@@ -4,7 +4,7 @@ const TEST_MODE=false;
 
 const fs = require('fs');
 const _ = require('lodash');
-const {drawSvg} = require('../../utils/drawUtils');
+const {drawSvg} = require('aoc-utils').drawUtils;
 
 const input = fs.readFileSync(`${__dirname}/input${TEST_MODE ? '.test': ''}.txt`, 'utf-8');
 
@@ -37,4 +37,4 @@ const layers = _(input)
 
 const image = stackLayers(layers);
 
-console.log(drawSvg(image, WIDTH, HEIGHT, {0: '#000', 1: '#FFF'}, 5));
+console.log(drawSvg(image, {0: '#000', 1: '#FFF'}, 5));
