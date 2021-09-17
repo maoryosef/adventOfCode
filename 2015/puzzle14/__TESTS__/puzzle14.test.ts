@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import each from 'jest-each';
+import each from 'jest-each';;
 import _ from 'lodash';
-import solver from '../puzzle1';
+import solver from '../puzzle14';
 
 const [testInputs, realInput] = _(__dirname)
 	.thru((dir: string) => fs.readdirSync(dir))
@@ -12,14 +12,14 @@ const [testInputs, realInput] = _(__dirname)
 
 const getPath = (filename: string) => `${__dirname}/${filename}`;
 
-describe('puzzle 1', () => {
+describe('puzzle 14', () => {
 	describe('part 1', () => {
-		if (testInputs.length > 0) {
-			const answers = [
-				3
-			];
+		const testAnswers = [
+			1120
+		];
 
-			const inputsWithAnswers = _.zip(testInputs, answers).filter(i => !!i[1]);
+		if (testInputs.length > 0 && testAnswers.length > 0) {
+			const inputsWithAnswers = _.zip(testInputs, testAnswers).filter(i => i[1] !== undefined);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
 				const res = solver.exec1(getPath(testInputFilename));
@@ -31,18 +31,17 @@ describe('puzzle 1', () => {
 		test('real input', () => {
 			const res = solver.exec1(getPath(realInput[0]));
 
-			expect(res).toBe(232);
+			expect(res).toBe(2660);
 		});
 	});
 
 	describe('part 2', () => {
-		if (testInputs.length > 0) {
-			const answers = [
-				undefined,
-				5
-			];
+		const testAnswers = [
+			689
+		];
 
-			const inputsWithAnswers = _.zip(testInputs, answers).filter(i => !!i[1]);
+		if (testInputs.length > 0 && testAnswers.length > 0) {
+			const inputsWithAnswers = _.zip(testInputs, testAnswers).filter(i => i[1] !== undefined);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
 				const res = solver.exec2(getPath(testInputFilename));
@@ -54,7 +53,7 @@ describe('puzzle 1', () => {
 		test('real input', () => {
 			const res = solver.exec2(getPath(realInput[0]));
 
-			expect(res).toBe(1783);
+			expect(res).toBe(1256);
 		});
 	});
 });

@@ -1,34 +1,36 @@
 import fs from 'fs';
-import _ from 'lodash';
 
 function parseInput(input: string) {
-	const parsedInput = _(input)
-		.split('')
-		.value();
-
-	return parsedInput;
+	return input.split('').map(x => +x);
 }
 
-function solve1(input: string[]) {
-	return input.reduce((acc, val) => acc + (val === '(' ? 1 : -1), 0);
-}
+function solve1(input: number[], iterations = 40) {
+	let result = [...input];
 
-function solve2(input: string[]) {
-	let floor = 0;
-	for (let i = 0; i < input.length; i++) {
-		const c = input[i];
-		if (c === '(') {
-			floor++;
-		} else {
-			floor--;
-		}
+	for (let i = 0; i < iterations; i++) {
+		let prevNum: number;
+		let numCount = 0;
 
-		if (floor < 0) {
-			return i + 1;
-		}
+		result = result.reduce((acc: number[], num) => {
+			if (prevNum && prevNum !== num) {
+				acc.push(numCount, prevNum);
+				numCount = 0;
+			}
+
+			numCount++;
+			prevNum = num;
+
+			return acc;
+		}, []);
+
+		result.push(numCount, prevNum!);
 	}
 
-	return input;
+	return result.length;
+}
+
+function solve2(input: number[]) {
+	return solve1(input, 50);
 }
 
 function exec(inputFilename: string, solver: Function, inputStr?: string) {

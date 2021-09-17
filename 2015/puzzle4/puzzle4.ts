@@ -1,34 +1,27 @@
 import fs from 'fs';
-import _ from 'lodash';
+import crypto from 'crypto';
 
 function parseInput(input: string) {
-	const parsedInput = _(input)
-		.split('')
-		.value();
-
-	return parsedInput;
-}
-
-function solve1(input: string[]) {
-	return input.reduce((acc, val) => acc + (val === '(' ? 1 : -1), 0);
-}
-
-function solve2(input: string[]) {
-	let floor = 0;
-	for (let i = 0; i < input.length; i++) {
-		const c = input[i];
-		if (c === '(') {
-			floor++;
-		} else {
-			floor--;
-		}
-
-		if (floor < 0) {
-			return i + 1;
-		}
-	}
-
 	return input;
+}
+
+function findHashNum(input: string, value = '00000') {
+	let num = 1;
+	let hash;
+
+	do  {
+		hash = crypto.createHash('md5').update(`${input}${++num}`).digest('hex');
+	} while (!hash.startsWith(value));
+
+	return num;
+}
+
+function solve1(input: string) {
+	return findHashNum(input);
+}
+
+function solve2(input: string) {
+	return findHashNum(input, '000000');
 }
 
 function exec(inputFilename: string, solver: Function, inputStr?: string) {

@@ -1,34 +1,37 @@
 import fs from 'fs';
-import _ from 'lodash';
+import _  from 'lodash';
 
-function parseInput(input: string) {
+function parseRow(row: string) {
+	return row.split('x').map(x => +x);
+}
+
+function parseInput(input: string): number[][] {
 	const parsedInput = _(input)
-		.split('')
+		.split('\n')
+		.map(parseRow)
 		.value();
 
 	return parsedInput;
 }
 
-function solve1(input: string[]) {
-	return input.reduce((acc, val) => acc + (val === '(' ? 1 : -1), 0);
+function solve1(input: number[][]) {
+	return input.reduce((acc, [l, w, h]) => {
+		const f1 = l * w;
+		const f2 = w * h;
+		const f3 = h * l;
+		const minF = Math.min(f1, f2, f3);
+
+
+		return acc + (2 * f1 + 2 * f2 + 2 * f3 + minF);
+	}, 0);
 }
 
-function solve2(input: string[]) {
-	let floor = 0;
-	for (let i = 0; i < input.length; i++) {
-		const c = input[i];
-		if (c === '(') {
-			floor++;
-		} else {
-			floor--;
-		}
+function solve2(input: number[][]) {
+	return input.reduce((acc, [l, w, h]) => {
+		const [f1, f2] = [l, w, h].sort((a, b) => a - b);
 
-		if (floor < 0) {
-			return i + 1;
-		}
-	}
-
-	return input;
+		return acc + (2 * f1 + 2 * f2 + l * w * h);
+	}, 0);
 }
 
 function exec(inputFilename: string, solver: Function, inputStr?: string) {

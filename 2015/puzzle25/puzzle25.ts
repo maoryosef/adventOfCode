@@ -1,33 +1,41 @@
 import fs from 'fs';
 import _ from 'lodash';
 
+function parseRow(row: string) {
+	return row.match(/Enter the code at row (.*?), column (.*?)\./)!.slice(1).map(x => +x - 1);
+}
+
 function parseInput(input: string) {
 	const parsedInput = _(input)
-		.split('')
-		.value();
+		.split('\n')
+		.map(parseRow)
+		.head();
 
 	return parsedInput;
 }
 
-function solve1(input: string[]) {
-	return input.reduce((acc, val) => acc + (val === '(' ? 1 : -1), 0);
-}
+function solve1([row, col]: number[]) {
+	let cRow = 0;
+	let cCol = 0;
+	let prevVal = 20151125;
+	while (cCol !== col || cRow !== row) {
+		const nextVal = prevVal * 252533 % 33554393;
 
-function solve2(input: string[]) {
-	let floor = 0;
-	for (let i = 0; i < input.length; i++) {
-		const c = input[i];
-		if (c === '(') {
-			floor++;
+		if (cRow === 0) {
+			cRow = cCol + 1;
+			cCol = 0;
 		} else {
-			floor--;
+			cCol++;
+			cRow--;
 		}
 
-		if (floor < 0) {
-			return i + 1;
-		}
+		prevVal = nextVal;
 	}
 
+	return prevVal;
+}
+
+function solve2(input: number[]) {
 	return input;
 }
 
@@ -40,7 +48,7 @@ function exec(inputFilename: string, solver: Function, inputStr?: string) {
 }
 
 if (!global.TEST_MODE) {
-	const inputFile = 'input.test.1.txt';
+	const inputFile = 'input.txt';
 	const {join} = require('path')
 
 	const res = exec(

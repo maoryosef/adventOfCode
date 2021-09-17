@@ -10,25 +10,50 @@ function parseInput(input: string) {
 }
 
 function solve1(input: string[]) {
-	return input.reduce((acc, val) => acc + (val === '(' ? 1 : -1), 0);
+	const visited = new Map();
+	let x = 0;
+	let y = 0;
+
+	visited.set('0,0', true);
+
+	for (let op of input) {
+		switch (op) {
+			case '^': y++; break;
+			case 'v': y--; break;
+			case '>': x++; break;
+			case '<': x--; break;
+		}
+
+		visited.set(`${x},${y}`, true);
+	}
+
+	return visited.size;
 }
 
 function solve2(input: string[]) {
-	let floor = 0;
-	for (let i = 0; i < input.length; i++) {
-		const c = input[i];
-		if (c === '(') {
-			floor++;
-		} else {
-			floor--;
+	const visited = new Map();
+	const walkers = [
+		{x: 0, y: 0},
+		{x: 0, y: 0}
+	];
+
+	visited.set('0,0', true);
+
+	let step = 0;
+	for (let op of input) {
+		const walker = walkers[step++ % 2];
+
+		switch (op) {
+			case '^': walker.y++; break;
+			case 'v': walker.y--; break;
+			case '>': walker.x++; break;
+			case '<': walker.x--; break;
 		}
 
-		if (floor < 0) {
-			return i + 1;
-		}
+		visited.set(`${walker.x},${walker.y}`, true);
 	}
 
-	return input;
+	return visited.size;
 }
 
 function exec(inputFilename: string, solver: Function, inputStr?: string) {
@@ -45,7 +70,7 @@ if (!global.TEST_MODE) {
 
 	const res = exec(
 		join(__dirname, '__TESTS__', inputFile),
-		solve1
+		solve2
 	);
 
 	console.log(res);
