@@ -4,8 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const each = require('jest-each').default;
 const _ = require('lodash');
-const solverP1 = require('../puzzle18.p1');
-const solverP2 = require('../puzzle18.p2');
+const solver = require('../puzzle18');
 
 const [testInputs, realInput] = _(__dirname)
 	.thru(fs.readdirSync)
@@ -15,46 +14,60 @@ const [testInputs, realInput] = _(__dirname)
 
 const getPath = filename => `${__dirname}/${filename}`;
 
-xdescribe('puzzle 18', () => {
+describe('puzzle 18', () => {
 	describe('part 1', () => {
-		if (testInputs.length > 0) {
-			const answers = [
-			];
+		const testAnswers = [
+			8,
+			86,
+			132,
+			136,
+			81
+		];
 
-			const inputsWithAnswers = _.zip(testInputs, answers);
+		if (testInputs.length > 0 && testAnswers.length > 0) {
+			const inputsWithAnswers = _.zip(testInputs, testAnswers).filter(i => i[1] !== undefined);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
-				const res = solverP1.solve(getPath(testInputFilename));
+				const res = solver.exec1(getPath(testInputFilename));
 
 				expect(res).toBe(expected);
 			});
 		}
 
 		test('real input', () => {
-			const res = solverP1.solve(getPath(realInput[0]));
+			const res = solver.exec1(getPath(realInput[0]));
 
-			expect(res).toBe(true);
+			expect(res).toBe(2946);
 		});
 	});
 
 	describe('part 2', () => {
-		if (testInputs.length > 0) {
-			const answers = [
-			];
+		const testAnswers = [
+			undefined,
+			undefined,
+			undefined,
+			undefined,
+			undefined,
+			8,
+			24,
+			32,
+			72
+		];
 
-			const inputsWithAnswers = _.zip(testInputs, answers);
+		if (testInputs.length > 0 && testAnswers.length > 0) {
+			const inputsWithAnswers = _.zip(testInputs, testAnswers).filter(i => i[1] !== undefined);
 
 			each(inputsWithAnswers).test('test case %s should be [%s]', (testInputFilename, expected) => {
-				const res = solverP2.solve(getPath(testInputFilename));
+				const res = solver.exec2(getPath(testInputFilename));
 
 				expect(res).toBe(expected);
 			});
 		}
 
 		test('real input', () => {
-			const res = solverP2.solve(getPath(realInput[0]));
+			const res = solver.exec2(getPath(realInput[0]));
 
-			expect(res).toBe(true);
+			expect(res).toBe(1222);
 		});
 	});
 });

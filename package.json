@@ -18,6 +18,7 @@
 	"dependencies": {
 		"aoc-utils": "file:utils",
 		"cli-progress": "^1.6.1",
+		"heap-js": "^2.1.6",
 		"js-combinatorics": "^0.5.4",
 		"lodash": "^4.17.4"
 	},
