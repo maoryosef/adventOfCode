@@ -41,7 +41,7 @@ function exec(inputFilename: string, solver: Function, inputStr?: string) {
 
 if (!global.TEST_MODE) {
 	const inputFile = 'input.test.1.txt';
-	const {join} = require('path')
+	const {join} = require('path');
 
 	const res = exec(
 		join(__dirname, '__TESTS__', inputFile),
