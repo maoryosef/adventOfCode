@@ -6,6 +6,5 @@ yarn.lock
 .eslintcache
 .cookie
 .tmp
-dist
 
 coverage

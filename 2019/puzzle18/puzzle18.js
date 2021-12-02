@@ -256,12 +256,12 @@ function exec(inputFilename, solver, inputStr) {
 }
 
 if (!global.TEST_MODE) {
-	const inputFile = 'input.test.6.txt';
+	const inputFile = 'input.test.4.txt';
 	const {join} = require('path');
 
 	const res = exec(
 		join(__dirname, '__TESTS__', inputFile),
-		solve2
+		solve1
 	);
 
 	console.log(res);

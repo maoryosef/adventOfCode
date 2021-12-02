@@ -1,7 +1,9 @@
-import fs from 'fs';
-import _ from 'lodash';
+'use strict';
 
-function parseInput(input: string) {
+const fs = require('fs');
+const _ = require('lodash');
+
+function parseInput(input) {
 	const parsedInput = _(input)
 		.split('')
 		.value();
@@ -9,11 +11,11 @@ function parseInput(input: string) {
 	return parsedInput;
 }
 
-function solve1(input: string[]) {
+function solve1(input) {
 	return input.reduce((acc, val) => acc + (val === '(' ? 1 : -1), 0);
 }
 
-function solve2(input: string[]) {
+function solve2(input) {
 	let floor = 0;
 	for (let i = 0; i < input.length; i++) {
 		const c = input[i];
@@ -31,7 +33,7 @@ function solve2(input: string[]) {
 	return input;
 }
 
-function exec(inputFilename: string, solver: Function, inputStr?: string) {
+function exec(inputFilename, solver, inputStr) {
 	const input = inputStr || fs.readFileSync(inputFilename, 'utf-8');
 
 	const parsedInput = parseInput(input);
@@ -51,7 +53,7 @@ if (!global.TEST_MODE) {
 	console.log(res);
 }
 
-export default {
-	exec1: (inputFilename: string) => exec(inputFilename, solve1),
-	exec2: (inputFilename: string) => exec(inputFilename, solve2)
+module.exports = {
+	exec1: (inputFilename) => exec(inputFilename, solve1),
+	exec2: (inputFilename) => exec(inputFilename, solve2)
 };
