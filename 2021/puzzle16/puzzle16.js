@@ -93,8 +93,47 @@ function solve1(input) {
 	return versionSum;
 }
 
+const sum = arr => arr.reduce((acc, v) => acc + v, 0);
+const product = arr => arr.reduce((acc, v) => acc * v, 1);
+
+function calcPackets(packet) {
+	if (packet.type === 4) {
+		return packet.value.literal;
+	}
+
+	if (packet.type === 0) {
+		return sum(packet.value.packets.map(p => calcPackets(p)));
+	}
+
+	if (packet.type === 1) {
+		return product(packet.value.packets.map(p => calcPackets(p)));
+	}
+
+	if (packet.type === 2) {
+		return Math.min(...packet.value.packets.map(p => calcPackets(p)));
+	}
+
+	if (packet.type === 3) {
+		return Math.max(...packet.value.packets.map(p => calcPackets(p)));
+	}
+
+	if (packet.type === 5) {
+		return calcPackets(packet.value.packets[0]) > calcPackets(packet.value.packets[1]) ? 1 : 0;
+	}
+
+	if (packet.type === 6) {
+		return calcPackets(packet.value.packets[0]) < calcPackets(packet.value.packets[1]) ? 1 : 0;
+	}
+
+	if (packet.type === 7) {
+		return calcPackets(packet.value.packets[0]) === calcPackets(packet.value.packets[1]) ? 1 : 0;
+	}
+}
+
 function solve2(input) {
-	return input;
+	const parsedPacket = parsePacket(input);
+
+	return calcPackets(parsedPacket.packets[0]);
 }
 
 function exec(inputFilename, solver, inputStr) {
@@ -111,7 +150,7 @@ if (!global.TEST_MODE) {
 
 	const res = exec(
 		join(__dirname, '__TESTS__', inputFile),
-		solve1
+		solve2
 	);
 
 	console.log(res);
