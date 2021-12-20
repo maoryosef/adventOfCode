@@ -54,18 +54,18 @@ function normalize(s1, s2) {
 	const beacons1 = s1.beacons;
 	const beacons2 = s2.beacons;
 
-	const distanceBucket = {};
-
 	for (let i = 0; i < 24; i++) {
+		const distanceBucket = new Map();
 		for (const b1 of beacons1) {
 			for (const b2 of beacons2) {
 				const arrangement = rotateVec(b2, i);
 				const pos = [b1[0] - arrangement[0], b1[1] - arrangement[1], b1[2] - arrangement[2]];
 				const dKey = pos.join(',');
 
-				distanceBucket[dKey] = (distanceBucket[dKey] || 0) + 1;
+				const distanceCount = (distanceBucket.get(dKey) || 0) + 1;
+				distanceBucket.set(dKey, distanceCount);
 
-				if (distanceBucket[dKey] > 11) {
+				if (distanceCount > 11) {
 					return {
 						id: s2.id,
 						pos,
