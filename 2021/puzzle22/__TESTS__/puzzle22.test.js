@@ -40,6 +40,9 @@ describe('puzzle 22', () => {
 
 	describe('part 2', () => {
 		const testAnswers = [
+			39,
+			39769202357779,
+			2758514936282235
 		];
 
 		if (testInputs.length > 0 && testAnswers.length > 0) {
@@ -55,7 +58,7 @@ describe('puzzle 22', () => {
 		test('real input', () => {
 			const res = solver.exec2(getPath(realInput[0]));
 
-			expect(res).toBe(true);
+			expect(res).toBe(1233304599156793);
 		});
 	});
 });
