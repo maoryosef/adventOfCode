@@ -1,4 +1,4 @@
-YEAR=2021
+YEAR=2022
 
 PUZZLES=(`ls $YEAR`)
 
