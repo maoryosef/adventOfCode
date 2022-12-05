@@ -4,12 +4,26 @@ const fs = require('fs');
 const _ = require('lodash');
 
 function parseRow(row) {
-	//move 1 from 2 to 1
-	const REGEX = /^move (\d+) from (\d+) to (\d+)$/;
-
-	const [, count, from, to] = row.match(REGEX);
+	const [, count, from, to] = row.match(/^move (\d+) from (\d+) to (\d+)$/);
 
 	return {count: +count, from: +from, to: +to};
+}
+
+function parseState(str) {
+	const state = [];
+	str.split('\n').slice(0, -1).forEach(row => {
+		const chars = row.split('');
+		for (let i = 1; i < chars.length; i += 4) {
+			const idx = (i - 1) / 4;
+			state[idx] = state[idx] ?? [];
+
+			if (chars[i] !== ' ') {
+				state[idx].unshift(chars[i]);
+			}
+		}
+	});
+
+	return state;
 }
 
 function parseInput(input) {
@@ -17,7 +31,7 @@ function parseInput(input) {
 		.split('\n\n')
 		.value();
 
-	const state = stateStr.split('\n').map(r => r.split(','));
+	const state = parseState(stateStr);
 	const commands = commandsStr.split('\n').map(parseRow);
 
 	return [state, commands];
@@ -35,14 +49,9 @@ function solve1([state, commands]) {
 }
 
 function solve2([state, commands]) {
-	commands.forEach(({count, from, to}) => {
-		const crates = [];
-		for (let i = 0; i < count; i++) {
-			crates.push(state[from - 1].pop());
-		}
-
-		state[to - 1].push(...crates.reverse());
-	});
+	commands.forEach(({count, from, to}) =>
+		state[to - 1].push(...state[from - 1].splice(state[from - 1].length - count, count))
+	);
 
 	return state.map(col => col[col.length - 1]).join('');
 }
