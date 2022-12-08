@@ -16,96 +16,41 @@ function parseInput(input) {
 	return parsedInput;
 }
 
-function isVisible(forest, row, col) {
-	let cRow = row - 1;
-	let cCol = col - 1;
+function checkLine(forest, row, col, rowFactor, colFactor) {
 	const height = forest[row][col];
-	let vLeft = true;
-	let vRight = true;
-	let vUp = true;
-	let vDown = true;
 
-	while (cRow >= 0) {
-		if (forest[cRow][col] >= height) {
-			vUp = false;
-			break;
+	row += rowFactor;
+	col += colFactor;
+	let count = 0;
+	while (row >= 0 && row < forest.length && col >= 0 && col < forest[row].length) {
+		count++;
+		if (forest[row][col] >= height) {
+			return {count, visible: false};
 		}
-		cRow--;
+
+		row += rowFactor;
+		col += colFactor;
 	}
 
-	cRow = row + 1;
-	while (cRow < forest.length) {
-		if (forest[cRow][col] >= height) {
-			vDown = false;
-			break;
-		}
-		cRow++;
-	}
+	return {count, visible: true};
+}
 
-	while (cCol >= 0) {
-		if (forest[row][cCol] >= height) {
-			vLeft = false;
-			break;
-		}
-		cCol--;
-	}
-
-	cCol = col + 1;
-	while (cCol < forest[row].length) {
-		if (forest[row][cCol] >= height) {
-			vRight = false;
-			break;
-		}
-		cCol++;
-	}
-
-	return vLeft || vRight || vDown || vUp;
+function isVisible(forest, row, col) {
+	return [
+		[-1, 0],
+		[1, 0],
+		[0, -1],
+		[0, 1],
+	].some(([fRow, fCol]) => checkLine(forest, row, col, fRow, fCol).visible);
 }
 
 function getViewSides(forest, row, col) {
-	let cRow = row - 1;
-	let cCol = col - 1;
-	const height = forest[row][col];
-	let vLeft = 0;
-	let vRight = 0;
-	let vUp = 0;
-	let vDown = 0;
-
-	while (cRow >= 0) {
-		vUp++;
-		if (forest[cRow][col] >= height) {
-			break;
-		}
-		cRow--;
-	}
-
-	cRow = row + 1;
-	while (cRow < forest.length) {
-		vDown++;
-		if (forest[cRow][col] >= height) {
-			break;
-		}
-		cRow++;
-	}
-
-	while (cCol >= 0) {
-		vLeft++;
-		if (forest[row][cCol] >= height) {
-			break;
-		}
-		cCol--;
-	}
-
-	cCol = col + 1;
-	while (cCol < forest[row].length) {
-		vRight++;
-		if (forest[row][cCol] >= height) {
-			break;
-		}
-		cCol++;
-	}
-
-	return [vLeft,vRight,vDown,vUp];
+	return [
+		checkLine(forest, row, col, 0, -1).count,
+		checkLine(forest, row, col, 0, 1).count,
+		checkLine(forest, row, col, -1, 0).count,
+		checkLine(forest, row, col, 1, 0).count
+	];
 }
 
 function solve1(input) {
@@ -130,10 +75,7 @@ function solve2(input) {
 			const viewingSides = getViewSides(input, i, j);
 			const viewScore = viewingSides[0] * viewingSides[1] * viewingSides[2] * viewingSides[3];
 
-			if (maxViewScore < viewScore) {
-				maxViewScore = viewScore;
-			}
-
+			maxViewScore = Math.max(maxViewScore, viewScore);
 		}
 	}
 
