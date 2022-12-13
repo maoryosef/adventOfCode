@@ -4,7 +4,7 @@ const fs = require('fs');
 const _ = require('lodash');
 
 function parseRow(row) {
-	return row.split('\n').map(r => eval(r));
+	return row.split('\n').map(r => JSON.parse(r));
 }
 
 function parseInput(input) {
@@ -17,61 +17,46 @@ function parseInput(input) {
 }
 
 function comparePair(left, right) {
-	if (_.isNumber(left) && _.isNumber(right)) {
+	if (Number.isInteger(left) && Number.isInteger(right)) {
 		return left - right;
 	}
 
-	if (_.isArray(left) && _.isNumber(right)) {
+	if (!Number.isInteger(left) && Number.isInteger(right)) {
 		return comparePair(left, [right]);
 	}
 
-	if (_.isNumber(left) && _.isArray(right)) {
+	if (Number.isInteger(left) && !Number.isInteger(right)) {
 		return comparePair([left], right);
 	}
 
-	if (_.isArray(left) && _.isArray(right)) {
-		for (let i = 0; i < left.length; i++) {
-			const leftVal = left[i];
-			const rightVal = right[i];
-			if (rightVal === undefined) {
-				return 1; //left is larger in this case
-			}
+	for (let i = 0; i < left.length && i < right.length; i++) {
+		const compare = comparePair(left[i], right[i]);
 
-			const compare = comparePair(leftVal, rightVal);
-
-			if (compare !== 0) {
-				return compare;
-			}
-		}
-
-		if (left.length < right.length) {
-			return -1; //right is larger in this case
+		if (compare !== 0) {
+			return compare;
 		}
 	}
 
-	return 0; //they are equal
+	return left.length - right.length;
 }
 
 function solve1(input) {
-	let sum = 0;
-	for (let i = 0; i < input.length; i++) {
-		if (comparePair(input[i][0], input[i][1]) < 1) {
-			sum += i + 1;
-		}
-	}
+	return input
+		.map((pair, idx) => comparePair(...pair) < 1 ? idx + 1: 0)
+		.reduce((sum, v) => sum + v, 0);
 
-	return sum;
 }
 
 function solve2(input) {
 	const divider1 = [[2]];
 	const divider2 = [[6]];
-	const packets = input.flat().concat([divider1], [divider2]);
+	const packets = input
+		.flat()
+		.concat([divider1], [divider2])
+		.sort(comparePair);
 
-	const sortedPackets = packets.sort(comparePair);
-
-	const d1Idx = sortedPackets.indexOf(divider1);
-	const d2Idx = sortedPackets.indexOf(divider2);
+	const d1Idx = packets.indexOf(divider1);
+	const d2Idx = packets.indexOf(divider2);
 
 	return (d1Idx + 1) * (d2Idx + 1);
 }
