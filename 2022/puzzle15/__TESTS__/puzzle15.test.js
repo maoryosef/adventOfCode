@@ -39,6 +39,7 @@ describe('puzzle 15', () => {
 
 	describe('part 2', () => {
 		const testAnswers = [
+			56000011
 		];
 
 		if (testInputs.length > 0 && testAnswers.length > 0) {
@@ -54,7 +55,7 @@ describe('puzzle 15', () => {
 		test('real input', () => {
 			const res = solver.exec2(getPath(realInput[0]));
 
-			expect(res).toBe(true);
+			expect(res).toBe(12480406634249);
 		});
 	});
 });
