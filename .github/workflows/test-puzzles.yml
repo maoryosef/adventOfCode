@@ -11,12 +11,13 @@ on:
 
 jobs:
   build:
-	name: build & test
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [18.x]
+
+	name: build & test
 
     steps:
     - uses: actions/checkout@v2
