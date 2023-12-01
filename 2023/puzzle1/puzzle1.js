@@ -3,8 +3,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 
-const digits = {
-	zero: 0,
+const DIGITS = {
 	one: 1,
 	two: 2,
 	three: 3,
@@ -14,38 +13,16 @@ const digits = {
 	seven: 7,
 	eight: 8,
 	nine: 9,
-	'0': 0,
-	'1': 1,
-	'2': 2,
-	'3': 3,
-	'4': 4,
-	'5': 5,
-	'6': 6,
-	'7': 7,
-	'8': 8,
-	'9': 9,
 };
 
-function replaceDigits(str) {
-	const values = [];
-	for (const [k,v] of Object.entries(digits)) {
-		const matches = [...str.matchAll(k)];
-		matches.forEach(m => {
-			values.push([m.index, v]);
-		});
-	}
-
-	return values
-		.sort(([i1], [i2]) => i1 - i2)
-		.map(([,v]) => v)
-		.join('');
+function parseRow(row) {
+	return [...row.matchAll(/\d/g)]
+		.map(x => +x);
 }
 
-function parseRow(row) {
-	return row
-		.split('')
-		.map(x => +x)
-		.filter(x => !isNaN(x));
+function parseRowWithDigitNames(row) {
+	return [...row.matchAll(new RegExp(`(?=(${Object.keys(DIGITS).join('|')}|\\d))`, 'gi'))]
+		.map(x => DIGITS[x[1]] || +x[1]);
 }
 
 function parseInput(input) {
@@ -56,19 +33,19 @@ function parseInput(input) {
 	return parsedInput;
 }
 
-function solve1(input) {
+function solve(input, parser) {
 	return input
-		.map(parseRow)
+		.map(parser)
 		.map(arr => arr[0] * 10 + arr.pop())
 		.reduce((acc, val) => acc + val, 0);
 }
 
+function solve1(input) {
+	return solve(input, parseRow);
+}
+
 function solve2(input) {
-	return input
-		.map(replaceDigits)
-		.map(parseRow)
-		.map(arr => arr[0] * 10 + arr.pop())
-		.reduce((acc, val) => acc + val, 0);
+	return solve(input, parseRowWithDigitNames);
 }
 
 function exec(inputFilename, solver, inputStr) {
