@@ -16,10 +16,14 @@ function parseInput(input) {
 	return parsedInput;
 }
 
+const testCases1 = [];
+const expectedRes1 = true;
 function solve1(input) {
 	return input;
 }
 
+const testCases2 = [];
+const expectedRes2 = true;
 function solve2(input) {
 	return input;
 }
@@ -46,5 +50,9 @@ if (!global.TEST_MODE) {
 
 module.exports = {
 	exec1: (inputFilename) => exec(inputFilename, solve1),
-	exec2: (inputFilename) => exec(inputFilename, solve2)
+	exec2: (inputFilename) => exec(inputFilename, solve2),
+	expectedRes1,
+	expectedRes2,
+	testCases1,
+	testCases2
 };
