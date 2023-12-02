@@ -27,12 +27,16 @@ function parseInput(input) {
 	return parsedInput;
 }
 
+const testCases1 = [8];
+const expectedRes1 = 2512;
 function solve1(input) {
 	const possible = input.filter(({rounds}) => rounds.every(({red = 0, green = 0, blue = 0}) => red <= 12 && green <= 13 && blue <= 14));
 
 	return possible.reduce((sum, {gameId}) => sum + gameId, 0);
 }
 
+const testCases2 = [2286];
+const expectedRes2 = 67335;
 function solve2(input) {
 	const minimums = input.map(({rounds}) => rounds.reduce((m, {red = -Infinity, green = -Infinity, blue = -Infinity}) => {
 		m.red = Math.max(m.red, red);
@@ -68,5 +72,9 @@ if (!global.TEST_MODE) {
 
 module.exports = {
 	exec1: (inputFilename) => exec(inputFilename, solve1),
-	exec2: (inputFilename) => exec(inputFilename, solve2)
+	exec2: (inputFilename) => exec(inputFilename, solve2),
+	expectedRes1,
+	expectedRes2,
+	testCases1,
+	testCases2
 };
