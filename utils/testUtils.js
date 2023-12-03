@@ -28,11 +28,13 @@ function initTests(puzzleDirname, {exec1, testCases1, expectedRes1, exec2, testC
 			});
 		}
 
-		test(`real input should be [${expectedRes}]`, () => {
-			const res = solver(getPath(realInput[0]));
+		if (!_.isNil(expectedRes)) {
+			test(`real input should be [${expectedRes}]`, () => {
+				const res = solver(getPath(realInput[0]));
 
-			expect(res).toBe(expectedRes);
-		});
+				expect(res).toBe(expectedRes);
+			});
+		}
 	});
 }
 
