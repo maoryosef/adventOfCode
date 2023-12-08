@@ -5,7 +5,7 @@ const path = require('path');
 const each = require('jest-each').default;
 const _ = require('lodash');
 
-function initTests(puzzleDirname, {exec1, testCases1, expectedRes1, exec2, testCases2, expectedRes2}) {
+function initTests(puzzleDirname, puzzle) {
 	const [testInputs, realInput] = _(puzzleDirname)
 		.thru(fs.readdirSync)
 		.filter(f => path.extname(f) === '.txt')
@@ -15,8 +15,8 @@ function initTests(puzzleDirname, {exec1, testCases1, expectedRes1, exec2, testC
 	const getPath = filename => `${puzzleDirname}/${filename}`;
 
 	describe.each([
-		['part 1', exec1, testCases1, expectedRes1],
-		['part 2', exec2, testCases2, expectedRes2],
+		['part 1', puzzle.exec1.bind(puzzle), puzzle.testCases1, puzzle.expectedRes1],
+		['part 2', puzzle.exec2.bind(puzzle), puzzle.testCases2, puzzle.expectedRes2],
 	])('%s', (_d, solver, testCases, expectedRes) => {
 		if (testInputs.length > 0 && testCases.length > 0) {
 			const inputsWithAnswers = _.zip(testInputs, testCases).filter(i => i[1] !== undefined);
