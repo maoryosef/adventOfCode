@@ -1,6 +1,6 @@
 'use strict';
 
 const { initTests } = require('../../../utils/testUtils');
-const puzzle = require('../puzzle<PNUM>');
+const puzzle = require('../puzzle___');
 
-describe('puzzle <PNUM>', () => initTests(__dirname, puzzle));
+describe('puzzle ___', () => initTests(__dirname, puzzle));
