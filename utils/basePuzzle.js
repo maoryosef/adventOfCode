@@ -22,10 +22,10 @@ class BasePuzzle {
 	}
 
 	exec1(inputFilename) {
-		return this.#exec(inputFilename, this.solve1);
+		return this.#exec(inputFilename, this.solve1.bind(this));
 	}
 	exec2(inputFilename) {
-		return this.#exec(inputFilename, this.solve2);
+		return this.#exec(inputFilename, this.solve2.bind(this));
 	}
 }
 

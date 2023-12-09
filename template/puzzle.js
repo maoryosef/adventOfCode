@@ -5,7 +5,7 @@ const {BasePuzzle} = require('aoc-utils/basePuzzle');
 
 class Puzzle___ extends BasePuzzle {
 	parseRow(row) {
-		parseInt(row);
+		return row;
 	}
 
 	parseInput(input) {
